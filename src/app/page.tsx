@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { useRouter } from "next/navigation";
 import AuthContainer from "@/components/auth-container";
@@ -9,14 +9,24 @@ import Link from "next/link";
 import loading from "@/components/ui/loading";
 
 export default function Page() {
-  const { user, isLoading, setToken } = useAuth();
+  const { user, isLoading } = useAuth();
   const router = useRouter();
+  const [token, setToken] = useState<string>("");
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setToken(token);
+    }
+  }, []);
+
+  console.log(`Token: ${token}`);
+
+  useEffect(() => {
+    if (!isLoading && !user && !token) {
       router.push("/login");
     }
-  }, [isLoading, user, router]);
+  }, [isLoading, user, router, token]);
 
   if (isLoading) {
     return loading();
