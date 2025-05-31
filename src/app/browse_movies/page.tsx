@@ -50,7 +50,7 @@ export default function BrowseMovies() {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-8 mx-24">
+      <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-8 mx-24">
         <h2 className="text-white text-xl font-semibold">Sort movies</h2>
         <select
           value={sortBy}
