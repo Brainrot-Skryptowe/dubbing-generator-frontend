@@ -38,11 +38,15 @@ export default function BrowseMovies() {
 
   const { data: movies_data, isLoading } = useMovies(sortBy, sortDir, token!);
 
-  if (!user) {
-    return loading();
-  }
+  if (!user || isLoading || !movies_data) return loading();
 
-  if (isLoading || !movies_data) return loading();
+  if ((movies_data as Movie[]).length === 0) {
+    return (
+      <div className="text-white text-center mb-16">
+        <h1 className="text-2xl font-semibold">No movies found</h1>
+      </div>
+    );
+  }
 
   return (
     <>
