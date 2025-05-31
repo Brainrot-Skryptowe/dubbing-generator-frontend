@@ -9,5 +9,5 @@ interface Movie {
   duration: number;
   file_path: string;
   thumbnail_path: string;
-  reels: any[]; 
+  reels: any[];
 }
