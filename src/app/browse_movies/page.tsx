@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuth } from "@/components/AuthProvider";
 import {
   Card,
   CardContent,
@@ -9,24 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ItemWithIcon } from "@/components/ui/item-with-icon";
 import { useMovies } from "@/hooks/useMovies";
+import { Calendar, Clock4, Languages, Pencil, SquarePlus } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const movies = [
-  {
-    id: 1,
-    name: "Movie1",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam diam tellus, tristique vitae leo sed, auctor finibus est. Nam diam ligula, lobortis vel risus sit amet, accumsan viverra metus. Nullam vitae ipsum metus. Sed venenatis leo leo, et rutrum nisi suscipit eget. Nullam quis neque hendrerit, eleifend risus vitae, sollicitudin lorem. Sed consequat sem velit, volutpat accumsan magna rhoncus nec. Duis a justo tincidunt, varius felis a, varius massa. Nunc scelerisque ultricies elit, non lacinia nibh tristique eu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed rutrum erat a tempus efficitur. Pellentesque scelerisque est leo, facilisis interdum libero rutrum a. Nullam pellentesque lectus at est commodo maximus. Proin rutrum pharetra aliquet. Curabitur vitae vehicula massa, faucibus bibendum ligula.",
-    imgUrl: "https://picsum.photos/1080/1920",
-  },
-  {
-    id: 2,
-    name: "Movie1",
-    description: "Bajojajo",
-    imgUrl: "https://picsum.photos/1080/1920",
-  },
-];
 
 export default function BrowseMovies() {
 
@@ -50,22 +36,50 @@ export default function BrowseMovies() {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mx-24">          
+    <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mx-24 my-16">          
       {(movies_data as Movie[]).map((movie) => (
         <Card key={movie.id} className="p-4">  
-          <CardTitle className="px-4">
-            <h1 className="text-xl font-semibold">{movie.title}</h1>
-          </CardTitle>
+
+          <CardHeader className="flex items-center justify-between">
+            <CardTitle>
+              <h1 className="text-2xl font-semibold">{movie.title}</h1>
+            </CardTitle>
+            <button>
+              <Pencil className="w-6 h-6 text-gray-500 hover:text-gray-700" />
+            </button>
+          </CardHeader>
+
           <CardContent className="px-4">
             <img
-                src={movie.thumbnail_path}
-                alt="Movie thumbnail"
-                className="h-[200px] w-auto rounded object-contain mx-auto mb-4"
+              src={movie.thumbnail_path}
+              alt="Movie thumbnail"
+              className="h-[200px] w-auto rounded object-contain mx-auto mb-4"
+            />
+
+            <div className="flex gap-4 w-full text-center mt-6">
+              <ItemWithIcon 
+                icon={<Clock4 className="w-6 h-6 text-gray-600" />}
+                label={`${movie.duration} seconds`}                
               />
+              <ItemWithIcon
+                icon={<Calendar className="w-6 h-6 text-gray-600" />}
+                label={movie.created_at}
+              />
+              <ItemWithIcon
+                icon={<Languages className="w-6 h-6 text-gray-600" />}
+                label={movie.native_lang}
+              />
+            </div>
+
+            {movie.description && movie.description.trim() !== "" && (
+              <CardDescription className="mt-4">
+                <h1 className="text-lg font-bold text-black">Description</h1>
+                <p className="text-base text-justify text-gray-600">{movie.description}</p>
+              </CardDescription>
+            )}
+
           </CardContent>
-          <CardDescription className="px-4">
-            <p>{movie.description}</p>
-          </CardDescription>
+          
           
         </Card>
       ))}
