@@ -15,6 +15,13 @@ import type { Movie } from "@/types/movie";
 import { useAuth } from "@/components/AuthProvider";
 import loading from "@/components/ui/loading";
 import { useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function BrowseMovies() {
   const { user } = useAuth();
@@ -49,29 +56,31 @@ export default function BrowseMovies() {
   }
 
   return (
-    <>
-      <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-8 mx-24">
+    <div className="flex flex-col items-center mx-24">
+      <div className="flex flex-col md:flex-row items-center gap-4 md:gap-10">
         <h2 className="text-white text-xl font-semibold">Sort movies</h2>
-        <select
-          value={sortBy}
-          onChange={(event) => setSortBy(event.target.value)}
-          className="w-48 bg-zinc-800 text-white p-3 rounded border border-white"
-        >
-          <option value="title">Title</option>
-          <option value="duration">Duration</option>
-          <option value="created_at">Created At</option>
-        </select>
-        <select
-          value={sortDir}
-          onChange={(event) => setSortDir(event.target.value)}
-          className="w-48 bg-zinc-800 text-white p-3 rounded border border-white"
-        >
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
+        <Select value={sortBy} onValueChange={setSortBy}>
+          <SelectTrigger className="w-48 border border-white bg-zinc-800 text-white p-6">
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent className="bg-zinc-800 border border-white text-white">
+            <SelectItem value="title">Title</SelectItem>
+            <SelectItem value="duration">Duration</SelectItem>
+            <SelectItem value="created_at">Created At</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={sortDir} onValueChange={setSortDir}>
+          <SelectTrigger className="w-48 border border-white bg-zinc-800 text-white p-6">
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent className="bg-zinc-800 border border-white text-white">
+            <SelectItem value="asc">Ascending</SelectItem>
+            <SelectItem value="desc">Descending</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mx-24 mb-16 mt-8">
+      <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mb-16 mt-8">
         {(movies_data as Movie[]).map((movie) => (
           <Card key={movie.id} className="p-4 bg-zinc-800 text-white">
             <CardHeader className="flex items-center justify-between mt-2">
@@ -117,6 +126,6 @@ export default function BrowseMovies() {
           </Card>
         ))}
       </div>
-    </>
+    </div>
   );
 }
