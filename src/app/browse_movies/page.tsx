@@ -29,9 +29,9 @@ export default function BrowseMovies() {
   const { data: movies_data, isLoading } = useMovies(token);
 
   if (!user) return null;
-  
+
   if (isLoading || !movies_data) return loading();
-  
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mx-24 mb-16">
       {(movies_data as Movie[]).map((movie) => (
