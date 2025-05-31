@@ -18,26 +18,25 @@ import { useRouter } from "next/navigation";
 
 export default function BrowseMovies() {
   const { user } = useAuth();
-  const [token, setToken] = useState<string>("");
+  const [token, setToken] = useState<string | null>("");
   const router = useRouter();
 
   const [sortBy, setSortBy] = useState("created_at");
   const [sortDir, setSortDir] = useState("desc");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setToken(token);
-    }
+    const localToken = localStorage.getItem("token");
+    setToken(localToken);
   }, []);
 
   useEffect(() => {
+    if (token === "") return;
     if (!user && !token) {
       router.push("/login");
     }
   }, [user, router, token]);
 
-  const { data: movies_data, isLoading } = useMovies(sortBy, sortDir, token);
+  const { data: movies_data, isLoading } = useMovies(sortBy, sortDir, token!);
 
   if (!user) {
     return loading();
