@@ -38,7 +38,7 @@ export default function NavBar() {
           <h1>Logout</h1>
         </Button>
       </nav>
-      <hr className="border-t border-gray-600 mb-12" />
+      <hr className="border-t border-gray-600 mb-8" />
     </div>
   );
 }
