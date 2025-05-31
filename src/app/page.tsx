@@ -11,7 +11,7 @@ import loading from "@/components/ui/loading";
 export default function Page() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
-  const [token, setToken] = useState<string>("");
+  const [token, setToken] = useState<string | undefined>("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -20,25 +20,13 @@ export default function Page() {
     }
   }, []);
 
-  console.log(`Token: ${token}`);
-
   useEffect(() => {
     if (!isLoading && !user && !token) {
       router.push("/login");
     }
   }, [isLoading, user, router, token]);
 
-  if (isLoading) {
-    return loading();
-  }
-
-  if (!user) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <h1 className="text-2xl font-bold">Redirecting to login...</h1>
-      </div>
-    );
-  }
+  if (isLoading || !user) return loading();
 
   return (
     <AuthContainer title={`Welcome, ${user.nick}!`} onSubmit={() => {}}>
