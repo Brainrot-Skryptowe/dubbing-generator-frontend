@@ -14,10 +14,12 @@ import { useEffect, useState } from "react";
 import type { Movie } from "@/types/movie";
 import { useAuth } from "@/components/AuthProvider";
 import loading from "@/components/ui/loading";
+import { useRouter } from "next/navigation";
 
 export default function BrowseMovies() {
   const { user } = useAuth();
   const [token, setToken] = useState<string>("");
+  const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -25,6 +27,12 @@ export default function BrowseMovies() {
       setToken(token);
     }
   }, []);
+
+  useEffect(() => {
+    if (!user && !token) {
+      router.push("/login");
+    }
+  }, [user, router, token]);
 
   const { data: movies_data, isLoading } = useMovies(token);
 
