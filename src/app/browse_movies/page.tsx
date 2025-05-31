@@ -4,14 +4,14 @@ import {
   Card,
   CardContent,
   CardDescription,
-  // CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { ItemWithIcon } from "@/components/ui/item-with-icon";
 import { useMovies } from "@/hooks/useMovies";
-import { Calendar, Clock4, Languages, Pencil, SquarePlus } from "lucide-react";
+import { Calendar, Clock4, Languages, Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
+import type { Movie } from "@/types/movie";
 
 export default function BrowseMovies() {
   const [token, setToken] = useState<string>("");
