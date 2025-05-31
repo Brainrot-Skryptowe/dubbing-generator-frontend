@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import AuthContainer from "@/components/auth-container";
 import ButtonForm from "@/components/button-form";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import Link from "next/link";
 
 export default function Page() {
   const { user, isLoading, setToken } = useAuth();
@@ -39,6 +40,9 @@ export default function Page() {
           <AvatarImage src={user.profile_image_url} alt={user.nick} />
         </Avatar>
       </div>
+      <Link href="/browse_movies">
+        <h1>Browse movies</h1>
+      </Link>
       <ButtonForm
         onClick={() => {
           setToken(undefined);
