@@ -1,36 +1,32 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { useRouter } from "next/navigation";
 import AuthContainer from "@/components/auth-container";
 import ButtonForm from "@/components/button-form";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
+import loading from "@/components/ui/loading";
 
 export default function Page() {
-  const { user, isLoading, setToken } = useAuth();
+  const { user, isLoading } = useAuth();
   const router = useRouter();
+  const [token, setToken] = useState<string | undefined>("");
 
   useEffect(() => {
-    if (!isLoading && !user) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setToken(token);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading && !user && !token) {
       router.push("/login");
     }
-  }, [isLoading, user, router]);
+  }, [isLoading, user, router, token]);
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Loading...
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <h1 className="text-2xl font-bold">Redirecting to login...</h1>
-      </div>
-    );
-  }
+  if (isLoading || !user) return loading();
 
   return (
     <AuthContainer title={`Welcome, ${user.nick}!`} onSubmit={() => {}}>
@@ -39,6 +35,9 @@ export default function Page() {
           <AvatarImage src={user.profile_image_url} alt={user.nick} />
         </Avatar>
       </div>
+      <Link href="/browse_movies">
+        <h1>Browse movies</h1>
+      </Link>
       <ButtonForm
         onClick={() => {
           setToken(undefined);

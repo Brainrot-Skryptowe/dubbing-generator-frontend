@@ -19,6 +19,12 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+
     try {
       const data = await register.mutateAsync({ email, nick, password });
       setToken(data.access_token);
