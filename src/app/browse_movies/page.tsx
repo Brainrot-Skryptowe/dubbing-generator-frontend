@@ -12,8 +12,11 @@ import { useMovies } from "@/hooks/useMovies";
 import { Calendar, Clock4, Languages, Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Movie } from "@/types/movie";
+import { useAuth } from "@/components/AuthProvider";
+import loading from "@/components/ui/loading";
 
 export default function BrowseMovies() {
+  const { user } = useAuth();
   const [token, setToken] = useState<string>("");
 
   useEffect(() => {
@@ -25,16 +28,12 @@ export default function BrowseMovies() {
 
   const { data: movies_data, isLoading } = useMovies(token);
 
-  if (isLoading || !movies_data) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Loading...
-      </div>
-    );
-  }
-
+  if (!user) return null;
+  
+  if (isLoading || !movies_data) return loading();
+  
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mx-24 my-16">
+    <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mx-24 mb-16">
       {(movies_data as Movie[]).map((movie) => (
         <Card key={movie.id} className="p-4">
           <CardHeader className="flex items-center justify-between">

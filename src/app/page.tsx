@@ -6,6 +6,7 @@ import AuthContainer from "@/components/auth-container";
 import ButtonForm from "@/components/button-form";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
+import loading from "@/components/ui/loading";
 
 export default function Page() {
   const { user, isLoading, setToken } = useAuth();
@@ -18,11 +19,7 @@ export default function Page() {
   }, [isLoading, user, router]);
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Loading...
-      </div>
-    );
+    return loading();
   }
 
   if (!user) {
