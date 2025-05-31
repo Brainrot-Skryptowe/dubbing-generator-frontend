@@ -1,4 +1,4 @@
-interface Movie {
+export interface Movie {
   id: number;
   title: string;
   description: string;
@@ -9,5 +9,5 @@ interface Movie {
   duration: number;
   file_path: string;
   thumbnail_path: string;
-  reels: any[];
+  reels: unknown[];
 }
