@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLogin } from "@/hooks/useLogin";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
@@ -15,19 +15,11 @@ export default function LoginPage() {
   const router = useRouter();
   const { setToken } = useAuth();
 
-  useEffect(() => {
-    const existingToken = localStorage.getItem("token");
-    if (existingToken) {
-      setToken(undefined);
-    }
-  }, [setToken]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const data = await login.mutateAsync({ email, password });
       setToken(data.access_token);
-      console.log(`Token set`);
       router.push("/");
     } catch (e) {
       alert(e);

@@ -2,50 +2,56 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { useRouter } from "next/navigation";
-import AuthContainer from "@/components/auth-container";
-import ButtonForm from "@/components/button-form";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import Link from "next/link";
 import loading from "@/components/ui/loading";
+import { useMovies } from "@/hooks/useMovies";
+import MovieCard from "@/components/movie-card";
+import SortingSettingsContainer from "@/components/sorting-settings-container";
+import type { Movie } from "@/types/movie";
 
 export default function Page() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading: isLoadingUser, token } = useAuth();
+
+  const [sortBy, setSortBy] = useState("created_at");
+  const [sortDir, setSortDir] = useState("desc");
+
+  const { data: movies_data, isLoading: isLoadingMovies } = useMovies(
+    sortBy,
+    sortDir,
+    token!,
+  );
   const router = useRouter();
-  const [token, setToken] = useState<string | undefined>("");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setToken(token);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isLoading && !user && !token) {
+    if (!isLoadingUser && !user) {
       router.push("/login");
     }
-  }, [isLoading, user, router, token]);
+  }, [isLoadingUser, user, router]);
 
-  if (isLoading || !user) return loading();
+  if (isLoadingUser || isLoadingMovies || !user || !movies_data)
+    return loading();
+
+  if ((movies_data as Movie[]).length === 0) {
+    return (
+      <div className="text-white text-center mb-16">
+        <h1 className="text-2xl font-semibold">No movies found</h1>
+      </div>
+    );
+  }
 
   return (
-    <AuthContainer title={`Welcome, ${user.nick}!`} onSubmit={() => {}}>
-      <div className="flex flex-row justify-center items-center mb-4">
-        <Avatar className="w-20 h-20">
-          <AvatarImage src={user.profile_image_url} alt={user.nick} />
-        </Avatar>
-      </div>
-      <Link href="/browse_movies">
-        <h1>Browse movies</h1>
-      </Link>
-      <ButtonForm
-        onClick={() => {
-          setToken(undefined);
-          router.push("/login");
-        }}
-        title="Logout"
-        type="button"
+    <div className="flex flex-col items-center mx-24">
+      <SortingSettingsContainer
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        sortDir={sortDir}
+        setSortDir={setSortDir}
       />
-    </AuthContainer>
+
+      <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mb-16 mt-8">
+        {(movies_data as Movie[]).map((movie) => (
+          <MovieCard key={movie.id} movie={movie} />
+        ))}
+      </div>
+    </div>
   );
 }
