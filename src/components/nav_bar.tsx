@@ -1,8 +1,9 @@
 "use client";
 
-import { useAuth } from "../AuthProvider";
+import { useAuth } from "./AuthProvider";
 import { useRouter } from "next/navigation";
-import { Button } from "./button";
+import { Button } from "./ui/button";
+import Image from "next/image";
 
 export default function NavBar() {
   const { user, isLoading, setToken } = useAuth();
@@ -16,7 +17,9 @@ export default function NavBar() {
     <div>
       <nav className="text-white flex flex-col md:flex-row items-center gap-4 py-6 md:mx-24 lg:mx-36 xl:mx-64">
         <div className="flex items-center">
-          <img
+          <Image
+            width={112}
+            height={112}
             src={user.profile_image_url}
             alt="User avatar"
             className="h-28 w-28 rounded-full"

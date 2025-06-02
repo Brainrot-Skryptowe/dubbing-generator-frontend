@@ -5,6 +5,7 @@ import User from "@/types/user";
 
 type AuthContextType = {
   setToken: (token: string | undefined) => void;
+  token?: string;
   user: User;
   refetchUser: () => void;
   isLoading: boolean;
@@ -36,7 +37,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ setToken, user, refetchUser: refetch, isLoading: isPending }}
+      value={{
+        setToken,
+        token,
+        user,
+        refetchUser: refetch,
+        isLoading: isPending,
+      }}
     >
       {children}
     </AuthContext.Provider>
