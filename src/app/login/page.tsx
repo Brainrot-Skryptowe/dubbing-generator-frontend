@@ -8,20 +8,24 @@ import InputForm from "@/components/input-form";
 import ButtonForm from "@/components/button-form";
 import LinkForm from "@/components/link-form";
 import ErrorWidget from "@/components/error";
+import GoogleAuthButton from "@/components/google-auth-button";
+import loading from "@/components/ui/loading";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const login = useLogin();
   const router = useRouter();
-  const { setToken } = useAuth();
+  const { setToken, token } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const data = await login.mutateAsync({ email, password });
       setToken(data.access_token);
+      setIsLoading(true);
       router.push("/");
     } catch (error: unknown) {
       if (error instanceof Error && typeof error.message == "string") {
@@ -34,6 +38,14 @@ export default function LoginPage() {
   };
 
   console.log(errorMessage);
+  if (isLoading) {
+    return loading();
+  }
+
+  if (token) {
+    setIsLoading(true);
+    router.push("/");
+  }
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -57,12 +69,15 @@ export default function LoginPage() {
             title="Log in"
             type="submit"
           />
-          <ButtonForm
-            onClick={() => router.push("#")}
-            title="Continue with Google"
-            imageSrc="/google.png"
-            type="button"
-          />
+          <GoogleAuthButton
+            onSuccess={(access_token: string) => {
+              setToken(access_token);
+              setIsLoading(true);
+              router.push("/");
+            }}
+            onError={() => {
+              setErrorMessage("Google authorization failed");
+            }}/>
           <LinkForm
             href="/register"
             title="Dont have an account? Sign up for free!"
