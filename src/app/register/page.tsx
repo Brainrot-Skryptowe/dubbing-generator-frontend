@@ -10,6 +10,8 @@ import LinkForm from "@/components/link-form";
 import ErrorWidget from "@/components/error";
 
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{5,}$/;
+import GoogleAuthButton from "@/components/google-auth-button";
+import loading from "@/components/ui/loading";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -17,9 +19,10 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const register = useRegister();
   const router = useRouter();
-  const { setToken } = useAuth();
+  const { setToken, token } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +57,7 @@ export default function RegisterPage() {
     try {
       const data = await register.mutateAsync({ email, nick, password });
       setToken(data.access_token);
+      setIsLoading(true);
       router.push("/");
     } catch (error: unknown) {
       if (error instanceof Error && typeof error.message == "string") {
@@ -64,6 +68,15 @@ export default function RegisterPage() {
       setPassword("");
     }
   };
+
+  if (isLoading) {
+    return loading();
+  }
+
+  if (token) {
+    setIsLoading(true);
+    router.push("/");
+  }
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -99,11 +112,15 @@ export default function RegisterPage() {
             title="Sign Up"
             type="submit"
           />
-          <ButtonForm
-            onClick={() => router.push("#")}
-            title="Continue with Google"
-            imageSrc="/google.png"
-            type="button"
+          <GoogleAuthButton
+            onSuccess={(access_token: string) => {
+              setToken(access_token);
+              setIsLoading(true);
+              router.push("/");
+            }}
+            onError={() => {
+              setErrorMessage("Google authorization failed");
+            }}
           />
           <LinkForm
             href="/login"
