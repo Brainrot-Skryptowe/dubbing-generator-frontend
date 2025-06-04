@@ -77,7 +77,8 @@ export default function LoginPage() {
             }}
             onError={() => {
               setErrorMessage("Google authorization failed");
-            }}/>
+            }}
+          />
           <LinkForm
             href="/register"
             title="Dont have an account? Sign up for free!"
