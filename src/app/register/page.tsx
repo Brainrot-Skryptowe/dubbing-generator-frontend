@@ -67,12 +67,6 @@ export default function RegisterPage() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      {errorMessage && (
-        <ErrorWidget
-          errorMessage={errorMessage}
-          onClose={() => setErrorMessage(null)}
-        />
-      )}
       <AuthContainer onSubmit={handleSubmit} title="Sign up">
         <InputForm
           name="Email"
@@ -116,6 +110,12 @@ export default function RegisterPage() {
             title="Have you already an account? Sign in now!"
           />
         </div>
+        {errorMessage && (
+          <ErrorWidget
+            errorMessage={errorMessage}
+            onClose={() => setErrorMessage(null)}
+          />
+        )}
       </AuthContainer>
     </div>
   );

@@ -37,12 +37,6 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      {errorMessage && (
-        <ErrorWidget
-          errorMessage={errorMessage}
-          onClose={() => setErrorMessage(null)}
-        />
-      )}
       <AuthContainer onSubmit={handleSubmit} title="Sign in">
         <InputForm
           name="Email"
@@ -74,6 +68,12 @@ export default function LoginPage() {
             title="Dont have an account? Sign up for free!"
           />
         </div>
+        {errorMessage && (
+          <ErrorWidget
+            errorMessage={errorMessage}
+            onClose={() => setErrorMessage(null)}
+          />
+        )}
       </AuthContainer>
     </div>
   );
