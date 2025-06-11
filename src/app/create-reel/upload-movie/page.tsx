@@ -26,7 +26,7 @@ export default function CreateReelUploadMovie() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoadingUser && !user && !token) {
+    if (!isLoadingUser && (!token || !user)) {
       router.push("/login");
     }
   }, [isLoadingUser, user, token, router]);
