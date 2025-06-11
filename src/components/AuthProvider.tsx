@@ -6,7 +6,7 @@ import User from "@/types/user";
 type AuthContextType = {
   setToken: (token: string | undefined) => void;
   token?: string;
-  user: User;
+  user?: User;
   refetchUser: () => void;
   isLoading: boolean;
 };
@@ -25,6 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (token) {
       localStorage.setItem("token", token);
+      refetch();
     } else {
       localStorage.removeItem("token");
     }

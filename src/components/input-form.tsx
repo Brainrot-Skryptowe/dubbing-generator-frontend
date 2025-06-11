@@ -26,7 +26,7 @@ export default function InputForm({
 
   return (
     <div>
-      <Label className="mb-4">{name}</Label>
+      <Label className="mb-2">{name}</Label>
       <Input
         type={type}
         placeholder={placeholder}

@@ -31,15 +31,31 @@ export default function NavBar() {
           </div>
         </div>
 
-        <Button
-          onClick={() => {
-            setToken(undefined);
-            router.push("/login");
-          }}
-          className="bg-transparent hover:bg-transparent mt-4 md:mt-0 md:ml-auto text-red-300 hover:text-red-400"
-        >
-          <h1>Logout</h1>
-        </Button>
+        <div className="flex mt-4 md:mt-0 md:ml-auto gap-4">
+          <Button
+            onClick={() => router.push("/")}
+            className="bg-transparent hover:bg-transparent text-white hover:text-gray-300"
+          >
+            <h1>Home</h1>
+          </Button>
+
+          <Button
+            onClick={() => router.push("/create-reel/upload-movie/")}
+            className="bg-transparent hover:bg-transparent text-white hover:text-gray-300"
+          >
+            <h1>Create reel</h1>
+          </Button>
+
+          <Button
+            onClick={() => {
+              setToken(undefined);
+              router.push("/login");
+            }}
+            className="bg-transparent hover:bg-transparent text-red-300 hover:text-red-400"
+          >
+            <h1>Logout</h1>
+          </Button>
+        </div>
       </nav>
       <hr className="border-t border-gray-600 mb-8" />
     </div>
