@@ -63,7 +63,7 @@ export function useCreatePipelineReel() {
           reelId: reelResult.id,
         };
       } catch (error) {
-        console.error("❌ Error in reel pipeline:", error);
+        console.error("Error in reel pipeline:", error);
         throw error;
       }
     },
