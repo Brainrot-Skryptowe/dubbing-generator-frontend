@@ -23,7 +23,7 @@ export default function MovieCard({ movie }: { movie: Movie }) {
           <CardTitle>
             <h1 className="text-2xl font-semibold">{movie.title}</h1>
           </CardTitle>
-          <button onClick={() => router.push(`/movie/${movie.id}`)}>
+          <button onClick={() => router.push(`/movies/${movie.id}/`)}>
             <Pencil className="w-6 h-6 text-white hover:text-gray-200" />
           </button>
         </CardHeader>

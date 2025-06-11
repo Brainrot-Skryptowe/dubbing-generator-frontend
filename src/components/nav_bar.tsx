@@ -18,8 +18,8 @@ export default function NavBar() {
       <nav className="text-white flex flex-col md:flex-row items-center gap-4 py-6 md:mx-24 lg:mx-36 xl:mx-64">
         <div className="flex items-center">
           <Image
-            width={112}
-            height={112}
+            width={96}
+            height={96}
             src={user.profile_image_url}
             alt="User avatar"
             className="h-28 w-28 rounded-full"
