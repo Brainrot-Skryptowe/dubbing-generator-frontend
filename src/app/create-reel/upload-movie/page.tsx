@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { useRouter } from "next/navigation";
 import InputForm from "@/components/input-form";
@@ -12,26 +12,18 @@ import { Button } from "@/components/ui/button";
 
 export default function CreateReelUploadMovie() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
-  const { updateReel } = useReel();
+  const {
+    title,
+    setTitle,
+    description,
+    setDescription,
+    nativeLang,
+    setNativeLang,
+    videoFile,
+    setVideoFile,
+    clearReel,
+  } = useReel();
   const router = useRouter();
-
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [nativeLang, setNativeLang] = useState("");
-  const [videoFile, setVideoFile] = useState<File | null>(null);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    updateReel({
-      title,
-      description,
-      nativeLang,
-      videoFile,
-    });
-
-    router.push("/create-reel/audio");
-  };
 
   useEffect(() => {
     if (!isLoadingUser && !user && !token) {
@@ -40,44 +32,60 @@ export default function CreateReelUploadMovie() {
   }, [isLoadingUser, user, token, router]);
 
   return (
-    <div className="flex flex-col text-white">
+    <div className="flex flex-col text-white gap-4">
       <h1 className="text-2xl w-96 md:w-150 lg:w-216 xl:w-256 font-bold mb-4 text-center">
         Upload movie
       </h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <InputForm
-          name="Title"
-          placeholder="Movie 1"
-          type="title"
-          onChange={setTitle}
-        />
+      <InputForm
+        name="Title"
+        placeholder="Movie 1"
+        type="title"
+        onChange={setTitle}
+        value={title}
+      />
 
-        <InputForm
-          name="Description"
-          placeholder="Fun fact about ..."
-          type="description"
-          onChange={setDescription}
-        />
+      <InputForm
+        name="Description"
+        placeholder="Fun fact about ..."
+        type="description"
+        onChange={setDescription}
+        value={description}
+      />
 
-        <SelectForm label="Original language" onChange={setNativeLang}>
-          <SelectItem value="en">English</SelectItem>
-          <SelectItem value="pl">Polish</SelectItem>
-          <SelectItem value="de">German</SelectItem>
-          <SelectItem value="es">Spanish</SelectItem>
-          <SelectItem value="fr">French</SelectItem>
-        </SelectForm>
+      <SelectForm
+        label="Original language"
+        value={nativeLang}
+        onChange={setNativeLang}
+      >
+        <SelectItem value="en">English</SelectItem>
+        <SelectItem value="pl">Polish</SelectItem>
+        <SelectItem value="de">German</SelectItem>
+        <SelectItem value="es">Spanish</SelectItem>
+        <SelectItem value="fr">French</SelectItem>
+      </SelectForm>
 
-        <FileInput onFileSelect={setVideoFile} />
+      <FileInput onFileSelect={setVideoFile} value={videoFile} />
 
-        <div className="flex gap-4 mt-4 mb-12">
-          <Button className="flex-1" variant="outline">
-            Clear
-          </Button>
-          <Button className="flex-1" variant="default" type="submit">
-            Next
-          </Button>
-        </div>
-      </form>
+      <div className="flex gap-4 mt-4 mb-12">
+        <Button
+          className="flex-1"
+          variant="outline"
+          onClick={() => {
+            clearReel();
+          }}
+        >
+          Clear
+        </Button>
+        <Button
+          className="flex-1"
+          variant="default"
+          onClick={() => {
+            router.push("/create-reel/audio");
+          }}
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 }
