@@ -7,11 +7,29 @@ type CreateAudioArgs = {
   token?: string;
 };
 
+type AudioResponse = {
+  id: number;
+  title: string;
+  text: string;
+  voice: string;
+  language: string;
+  speed: number | null;
+  created_at: string;
+  file_path: string;
+  srt: {
+    id: number;
+    audio_id: number;
+    created_at: string;
+    file_path: string;
+  } | null;
+};
+
 export function useCreateAudio() {
-  return useMutation({
+  return useMutation<AudioResponse, Error, CreateAudioArgs>({
     mutationFn: async ({ reel, token }: CreateAudioArgs) => {
       const { title, subtitlesText, voice, audioLang, speed } = reel;
-      if (!token) throw new Error("Brak tokenu – użytkownik niezalogowany");
+      if (!token) throw new Error("Token is missing – user not logged in");
+
       const body = JSON.stringify({
         title,
         text: subtitlesText,
@@ -19,7 +37,9 @@ export function useCreateAudio() {
         language: audioLang,
         speed,
       });
+
       console.log("Creating audio with body:", body);
+
       const response = await fetch(`${API_BASE_URL}/audios/`, {
         method: "POST",
         headers: {
@@ -31,26 +51,50 @@ export function useCreateAudio() {
 
       if (!response.ok) {
         const errorMessage =
-          (await response.json())?.detail || "Błąd przy tworzeniu audio";
+          (await response.json())?.detail || "Error creating audio";
         throw new Error(errorMessage);
       }
 
-      const audioData = await response.json();
+      const audioData: AudioResponse = await response.json();
       console.log(`audio id : ${audioData.id}`);
       return audioData;
     },
   });
 }
 
+type CreateAudioTranscriptionArgs = {
+  audioId: number;
+  transcriptionModel: string;
+  token?: string;
+};
+
+type AudioTranscriptionResponse = {
+  id: number;
+  audio_id: number;
+  file_path: string;
+  created_at: string;
+};
+
 export function useCreateAudioTranscription() {
-  return useMutation({
-    mutationFn: async ({ audioId, transcriptionModel, token }) => {
-      if (!token) throw new Error("Brak tokenu – użytkownik niezalogowany");
+  return useMutation<
+    AudioTranscriptionResponse,
+    Error,
+    CreateAudioTranscriptionArgs
+  >({
+    mutationFn: async ({
+      audioId,
+      transcriptionModel,
+      token,
+    }: CreateAudioTranscriptionArgs) => {
+      if (!token) throw new Error("Token is missing – user not logged in");
+
       const body = JSON.stringify({
         audio_id: audioId,
         transcription_model: transcriptionModel,
       });
-      console.log("Creating audio with body:", body);
+
+      console.log("Creating audio transcription with body:", body);
+
       const response = await fetch(`${API_BASE_URL}/audios/transcribe`, {
         method: "POST",
         headers: {
@@ -63,11 +107,12 @@ export function useCreateAudioTranscription() {
       if (!response.ok) {
         const errorMessage =
           (await response.json())?.detail ||
-          "Błąd przy tworzeniu transkrypcji audio";
+          "Error creating audio transcription";
         throw new Error(errorMessage);
       }
 
-      return await response.json();
+      const data: AudioTranscriptionResponse = await response.json();
+      return data;
     },
   });
 }
