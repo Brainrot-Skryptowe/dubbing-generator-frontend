@@ -3,6 +3,7 @@
 import { useAuth } from "@/components/AuthProvider";
 import InputForm from "@/components/input-form";
 import { useReel } from "@/components/movie-provider";
+import NumberInputForm from "@/components/number-input";
 import SelectForm from "@/components/select-form";
 import { Button } from "@/components/ui/button";
 import { SelectItem } from "@/components/ui/select";
@@ -19,6 +20,10 @@ export default function CreateReelAudio() {
     setVoice,
     audioLang,
     setAudioLang,
+    speed,
+    setSpeed,
+    transcriptionModel,
+    setTranscriptionModel,
   } = useReel();
   const router = useRouter();
   const filteredVoices = VOICE_OPTIONS[audioLang] || [];
@@ -48,11 +53,11 @@ export default function CreateReelAudio() {
         onChange={setAudioLang}
         value={audioLang}
       >
-        <SelectItem value="en">English</SelectItem>
-        <SelectItem value="esp">Spanish</SelectItem>
-        <SelectItem value="fr">French</SelectItem>
-        <SelectItem value="itl">Italian</SelectItem>
-        <SelectItem value="pr">Portuguese</SelectItem>
+        <SelectItem value="a">English</SelectItem>
+        <SelectItem value="e">Spanish</SelectItem>
+        <SelectItem value="f">French</SelectItem>
+        <SelectItem value="i">Italian</SelectItem>
+        <SelectItem value="p">Portuguese</SelectItem>
       </SelectForm>
 
       <SelectForm
@@ -66,6 +71,28 @@ export default function CreateReelAudio() {
             {voiceOption.label}
           </SelectItem>
         ))}
+      </SelectForm>
+
+      <NumberInputForm
+        label="Speed"
+        value={speed}
+        onChange={setSpeed}
+        min={0}
+        max={1}
+        step={0.1}
+      />
+
+      <SelectForm
+        label="Transcription model"
+        onChange={setTranscriptionModel}
+        value={transcriptionModel}
+      >
+        <SelectItem value="tiny">tiny</SelectItem>
+        <SelectItem value="base">base</SelectItem>
+        <SelectItem value="small">small</SelectItem>
+        <SelectItem value="medium">medium</SelectItem>
+        <SelectItem value="turbo">turbo</SelectItem>
+        <SelectItem value="large">large</SelectItem>
       </SelectForm>
 
       <div className="flex gap-4 mt-4 mb-12">

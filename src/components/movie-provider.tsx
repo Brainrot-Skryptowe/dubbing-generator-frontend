@@ -9,6 +9,8 @@ export type ReelData = {
   subtitlesText: string;
   voice: string;
   audioLang: string;
+  speed: number;
+  transcriptionModel: string;
 };
 
 type ReelContextType = {
@@ -19,6 +21,8 @@ type ReelContextType = {
   subtitlesText: string;
   voice: string;
   audioLang: string;
+  speed: number;
+  transcriptionModel: string;
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
   setNativeLang: (lang: string) => void;
@@ -26,6 +30,8 @@ type ReelContextType = {
   setSubtitlesText: (subtitlesText: string) => void;
   setVoice: (voice: string) => void;
   setAudioLang: (audioLang: string) => void;
+  setSpeed: (speed: number) => void;
+  setTranscriptionModel: (transcriptionMode: string) => void;
   clearReel: () => void;
   getReel: () => ReelData;
 };
@@ -36,11 +42,13 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
   const initialReelState: ReelData = {
     title: "",
     description: "",
-    nativeLang: "",
+    nativeLang: "English",
     videoFile: null,
     subtitlesText: "",
     voice: "",
     audioLang: "",
+    speed: 0.2,
+    transcriptionModel: "tiny",
   };
 
   const setTitle = (title: string) => setReel((prev) => ({ ...prev, title }));
@@ -64,6 +72,12 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
   const setAudioLang = (audioLang: string) =>
     setReel((prev) => ({ ...prev, audioLang: audioLang }));
 
+  const setSpeed = (speed: number) =>
+    setReel((prev) => ({ ...prev, speed: speed }));
+
+  const setTranscriptionModel = (transcriptionModel: string) =>
+    setReel((prev) => ({ ...prev, transcriptionModel: transcriptionModel }));
+
   const getReel = () => reel;
 
   const clearReel = () => setReel(initialReelState);
@@ -85,6 +99,10 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
         setVoice,
         audioLang: reel.audioLang,
         setAudioLang,
+        speed: reel.speed,
+        setSpeed,
+        transcriptionModel: reel.transcriptionModel,
+        setTranscriptionModel,
         getReel,
         clearReel,
       }}
