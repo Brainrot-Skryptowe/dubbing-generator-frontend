@@ -1,0 +1,32 @@
+export function useMovies(movieId: number, token?: string) {
+  return useQuery({
+    queryKey: ["userMovies", token, sortBy, sortDir],
+    queryFn: async () => {
+      const res = await fetch(
+        `${API_BASE_URL}/movies/?sort_by=${sortBy}&sort_dir=${sortDir}`,
+        {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        },
+      );
+      if (!res.ok) throw new Error("Not authenticated");
+      return res.json();
+    },
+    enabled: !!token,
+    retry: false,
+  });
+}
+
+export function useMovieWithReels(id: string | number, token?: string) {
+  return useQuery<MovieWithReels>({
+    queryKey: ["movieWithReels", id, token],
+    queryFn: async () => {
+      const res = await fetch(`${API_BASE_URL}/movies/${id}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (!res.ok) throw new Error("Not authenticated");
+      return res.json();
+    },
+    enabled: !!token && !!id,
+    retry: false,
+  });
+}

@@ -17,7 +17,7 @@ export default function Page() {
   const { data: movies_data, isLoading: isLoadingMovies } = useMovies(
     sortBy,
     sortDir,
-    token!,
+    token!
   );
   const router = useRouter();
 
