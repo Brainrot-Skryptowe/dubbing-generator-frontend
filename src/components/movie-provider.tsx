@@ -1,16 +1,27 @@
 "use client";
 import { createContext, useContext, useState, ReactNode } from "react";
 
-export type ReelData = {
-  title: string;
-  description: string;
-  nativeLang: string;
-  videoFile: File | null;
+type Audio = {
   subtitlesText: string;
   voice: string;
   audioLang: string;
   speed: number;
   transcriptionModel: string;
+};
+
+export type ReelData = {
+  title: string;
+  description: string;
+  nativeLang: string;
+  videoFile: File | null;
+
+  subtitlesText: string;
+  voice: string;
+  audioLang: string;
+  speed: number;
+  transcriptionModel: string;
+
+  audios: Audio[];
 };
 
 type ReelContextType = {
@@ -23,6 +34,7 @@ type ReelContextType = {
   audioLang: string;
   speed: number;
   transcriptionModel: string;
+  audios: Audio[];
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
   setNativeLang: (lang: string) => void;
@@ -34,6 +46,13 @@ type ReelContextType = {
   setTranscriptionModel: (transcriptionMode: string) => void;
   clearReel: () => void;
   getReel: () => ReelData;
+  addAudio: (audio: {
+    subtitlesText: string;
+    voice: string;
+    audioLang: string;
+    speed: number;
+    transcriptionModel: string;
+  }) => void;
 };
 
 const ReelContext = createContext<ReelContextType | undefined>(undefined);
@@ -49,6 +68,7 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
     audioLang: "",
     speed: 0.2,
     transcriptionModel: "tiny",
+    audios: [],
   };
 
   const setTitle = (title: string) => setReel((prev) => ({ ...prev, title }));
@@ -78,6 +98,13 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
   const setTranscriptionModel = (transcriptionModel: string) =>
     setReel((prev) => ({ ...prev, transcriptionModel: transcriptionModel }));
 
+  const addAudio = (audio: Audio) => {
+    setReel((prev) => ({
+      ...prev,
+      audios: [...prev.audios, audio],
+    }));
+  };
+
   const getReel = () => reel;
 
   const clearReel = () => setReel(initialReelState);
@@ -103,6 +130,8 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
         setSpeed,
         transcriptionModel: reel.transcriptionModel,
         setTranscriptionModel,
+        audios: reel.audios,
+        addAudio,
         getReel,
         clearReel,
       }}

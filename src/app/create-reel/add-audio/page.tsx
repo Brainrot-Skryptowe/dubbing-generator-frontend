@@ -13,21 +13,15 @@ import { useEffect, useState } from "react";
 import { PencilLine } from "lucide-react";
 import { useTextGenerator } from "@/hooks/useAi";
 
-export default function CreateReelAudio() {
+export default function AddAudio() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
   const { mutateAsync: generateText } = useTextGenerator();
-  const {
-    subtitlesText,
-    setSubtitlesText,
-    voice,
-    setVoice,
-    audioLang,
-    setAudioLang,
-    speed,
-    setSpeed,
-    transcriptionModel,
-    setTranscriptionModel,
-  } = useReel();
+  const { addAudio } = useReel();
+  const [subtitlesText, setSubtitlesText] = useState("");
+  const [voice, setVoice] = useState("");
+  const [audioLang, setAudioLang] = useState("");
+  const [speed, setSpeed] = useState(0.2);
+  const [transcriptionModel, setTranscriptionModel] = useState("tiny");
   const [duration, setDuration] = useState<number | undefined>(undefined);
   const [showDurationInput, setShowDurationInput] = useState(false);
 
@@ -44,7 +38,7 @@ export default function CreateReelAudio() {
   return (
     <div className="flex flex-col text-white gap-4">
       <h1 className="text-2xl w-96 md:w-150 lg:w-216 xl:w-256 font-bold mb-4 text-center">
-        Specify audio
+        Add reel
       </h1>
 
       <SelectForm
@@ -102,6 +96,7 @@ export default function CreateReelAudio() {
                     "and audioLang:",
                     audioLang,
                   );
+                  console.log(subtitlesText);
                   const result = await generateText({
                     description: subtitlesText,
                     duration: duration,
@@ -178,9 +173,18 @@ export default function CreateReelAudio() {
         <Button
           className="flex-1"
           variant="default"
-          onClick={() => router.push("/create-reel/submit-reel/")}
+          onClick={() => {
+            addAudio({
+              subtitlesText,
+              voice,
+              audioLang,
+              speed,
+              transcriptionModel,
+            });
+            router.back();
+          }}
         >
-          Next
+          Add
         </Button>
       </div>
     </div>
