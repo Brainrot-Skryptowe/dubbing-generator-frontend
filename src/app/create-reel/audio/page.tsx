@@ -9,10 +9,13 @@ import { Button } from "@/components/ui/button";
 import { SelectItem } from "@/components/ui/select";
 import { VOICE_OPTIONS } from "@/config/constants";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { PencilLine } from "lucide-react";
+import { useTextGenerator } from "@/hooks/useAi";
 
 export default function CreateReelAudio() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
+  const { mutateAsync: generateText } = useTextGenerator();
   const {
     subtitlesText,
     setSubtitlesText,
@@ -25,8 +28,12 @@ export default function CreateReelAudio() {
     transcriptionModel,
     setTranscriptionModel,
   } = useReel();
+  const [duration, setDuration] = useState<number | undefined>(undefined);
+  const [showDurationInput, setShowDurationInput] = useState(false);
+
   const router = useRouter();
   const filteredVoices = VOICE_OPTIONS[audioLang] || [];
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     if (!isLoadingUser && (!token || !user)) {
@@ -40,14 +47,6 @@ export default function CreateReelAudio() {
         Specify audio
       </h1>
 
-      <InputForm
-        name="Subtitles text"
-        placeholder="Hello! Did you know that ...."
-        type="description"
-        onChange={setSubtitlesText}
-        value={subtitlesText}
-      />
-
       <SelectForm
         label="Audio language"
         onChange={setAudioLang}
@@ -59,6 +58,76 @@ export default function CreateReelAudio() {
         <SelectItem value="i">Italian</SelectItem>
         <SelectItem value="p">Portuguese</SelectItem>
       </SelectForm>
+
+      <div
+        className={`relative transition-all ${!audioLang ? "opacity-50 pointer-events-none" : ""}`}
+      >
+        <InputForm
+          name="Audio text"
+          placeholder="Hello! Did you know that ...."
+          type="description"
+          onChange={setSubtitlesText}
+          value={subtitlesText}
+        />
+        <Button
+          type="button"
+          variant="ghost"
+          className="absolute right-2 top-2 h-8 w-8 p-0"
+          onClick={() => setShowDurationInput(!showDurationInput)}
+          disabled={isGenerating}
+        >
+          <PencilLine className="w-5 h-5 text-yellow-400" />
+        </Button>
+
+        {showDurationInput && (
+          <div className="mt-4 flex flex-col gap-2">
+            <NumberInputForm
+              label="Target duration (sec)"
+              value={duration}
+              onChange={setDuration}
+              min={1}
+              max={120}
+              step={1}
+            />
+            <Button
+              type="button"
+              variant="default"
+              onClick={async () => {
+                if (!duration || !audioLang) return;
+                try {
+                  setIsGenerating(true);
+                  console.log(
+                    "Generating text with duration:",
+                    duration,
+                    "and audioLang:",
+                    audioLang,
+                  );
+                  const result = await generateText({
+                    description: subtitlesText,
+                    duration: duration,
+                    target_lang: audioLang,
+                    token: token,
+                  });
+                  setSubtitlesText(result.text);
+                } catch (e) {
+                  console.error("Error:", e);
+                } finally {
+                  setIsGenerating(false);
+                }
+              }}
+              disabled={isGenerating}
+            >
+              {isGenerating ? "Generating..." : "Generate"}
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {!audioLang && (
+        <p className="text-red-400 text-sm italic mt-1">
+          Please select audio language first.
+        </p>
+      )}
 
       <SelectForm
         label="Voice"
