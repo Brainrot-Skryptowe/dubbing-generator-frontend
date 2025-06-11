@@ -39,7 +39,7 @@ export function useCreateMusic() {
 
       if (!musicRes.ok) {
         const errorMessage =
-            (await musicRes.json())?.detail || "Error creating music";
+          (await musicRes.json())?.detail || "Error creating music";
         throw new Error(errorMessage);
       }
 

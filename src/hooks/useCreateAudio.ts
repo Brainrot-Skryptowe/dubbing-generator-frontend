@@ -51,7 +51,7 @@ export function useCreateAudio() {
 
       if (!response.ok) {
         const errorMessage =
-            (await response.json())?.detail || "Error creating audio";
+          (await response.json())?.detail || "Error creating audio";
         throw new Error(errorMessage);
       }
 
@@ -76,8 +76,16 @@ type AudioTranscriptionResponse = {
 };
 
 export function useCreateAudioTranscription() {
-  return useMutation<AudioTranscriptionResponse, Error, CreateAudioTranscriptionArgs>({
-    mutationFn: async ({ audioId, transcriptionModel, token }: CreateAudioTranscriptionArgs) => {
+  return useMutation<
+    AudioTranscriptionResponse,
+    Error,
+    CreateAudioTranscriptionArgs
+  >({
+    mutationFn: async ({
+      audioId,
+      transcriptionModel,
+      token,
+    }: CreateAudioTranscriptionArgs) => {
       if (!token) throw new Error("Token is missing – user not logged in");
 
       const body = JSON.stringify({
@@ -98,8 +106,8 @@ export function useCreateAudioTranscription() {
 
       if (!response.ok) {
         const errorMessage =
-            (await response.json())?.detail ||
-            "Error creating audio transcription";
+          (await response.json())?.detail ||
+          "Error creating audio transcription";
         throw new Error(errorMessage);
       }
 

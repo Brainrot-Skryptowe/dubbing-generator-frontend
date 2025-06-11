@@ -26,46 +26,48 @@ export function useCreatePipelineReel() {
   const { mutateAsync: createMovie } = useCreateMovies();
   const { mutateAsync: createReel } = useCreateReels();
   const { mutateAsync: createAudioTranscription } =
-      useCreateAudioTranscription();
+    useCreateAudioTranscription();
 
-  return useMutation<CreateReelPipelineResponse, Error, CreateReelPipelineArgs>({
-    mutationFn: async ({ reel, token }) => {
-      try {
-        const movie = await createMovie({ reel, token });
-        const audio = await createAudio({ reel, token });
+  return useMutation<CreateReelPipelineResponse, Error, CreateReelPipelineArgs>(
+    {
+      mutationFn: async ({ reel, token }) => {
+        try {
+          const movie = await createMovie({ reel, token });
+          const audio = await createAudio({ reel, token });
 
-        const { transcriptionModel, musicVolume } = reel;
-        const includeSrt = transcriptionModel !== "none";
+          const { transcriptionModel, musicVolume } = reel;
+          const includeSrt = transcriptionModel !== "none";
 
-        if (includeSrt) {
-          await createAudioTranscription({
+          if (includeSrt) {
+            await createAudioTranscription({
+              audioId: audio.id,
+              transcriptionModel,
+              token,
+            });
+          }
+
+          const music = await createMusic({ reel, token });
+
+          const reelResult = await createReel({
+            movieId: movie.id,
             audioId: audio.id,
-            transcriptionModel,
+            musicId: music.id,
+            musicVolume,
+            includeSrt,
             token,
           });
+
+          return {
+            movieId: movie.id,
+            audioId: audio.id,
+            musicId: music.id,
+            reelId: reelResult.id,
+          };
+        } catch (error) {
+          console.error("Error in reel pipeline:", error);
+          throw error;
         }
-
-        const music = await createMusic({ reel, token });
-
-        const reelResult = await createReel({
-          movieId: movie.id,
-          audioId: audio.id,
-          musicId: music.id,
-          musicVolume,
-          includeSrt,
-          token,
-        });
-
-        return {
-          movieId: movie.id,
-          audioId: audio.id,
-          musicId: music.id,
-          reelId: reelResult.id,
-        };
-      } catch (error) {
-        console.error("Error in reel pipeline:", error);
-        throw error;
-      }
+      },
     },
-  });
+  );
 }

@@ -15,11 +15,11 @@ type TextGeneratorResponse = {
 export function useTextGenerator() {
   return useMutation<TextGeneratorResponse, Error, TextGeneratorArgs>({
     mutationFn: async ({
-                         description,
-                         duration,
-                         target_lang,
-                         token,
-                       }: TextGeneratorArgs) => {
+      description,
+      duration,
+      target_lang,
+      token,
+    }: TextGeneratorArgs) => {
       if (!token) throw new Error("Token is missing – user not logged in");
 
       const response = await fetch(`${API_BASE_URL}/reel-texts/`, {
@@ -37,7 +37,7 @@ export function useTextGenerator() {
 
       if (!response.ok) {
         const errorMessage =
-            (await response.json())?.detail || "Error generating text";
+          (await response.json())?.detail || "Error generating text";
         throw new Error(errorMessage);
       }
 

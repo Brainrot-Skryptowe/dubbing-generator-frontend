@@ -19,13 +19,13 @@ type CreateReelResponse = {
 export function useCreateReels() {
   return useMutation<CreateReelResponse, Error, CreateReelArgs>({
     mutationFn: async ({
-                         movieId,
-                         audioId,
-                         musicId,
-                         musicVolume,
-                         includeSrt,
-                         token,
-                       }) => {
+      movieId,
+      audioId,
+      musicId,
+      musicVolume,
+      includeSrt,
+      token,
+    }) => {
       if (!token) throw new Error("Token is missing – user not logged in");
 
       const response = await fetch(`${API_BASE_URL}/reels/`, {
@@ -45,7 +45,7 @@ export function useCreateReels() {
 
       if (!response.ok) {
         const errorMessage =
-            (await response.json())?.detail || "Error creating reel";
+          (await response.json())?.detail || "Error creating reel";
         throw new Error(errorMessage);
       }
 

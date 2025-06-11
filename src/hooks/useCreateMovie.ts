@@ -72,7 +72,7 @@ export function useCreateMovies() {
 
       if (!movieRes.ok) {
         const errorMessage =
-            (await movieRes.json())?.detail || "Error creating movie";
+          (await movieRes.json())?.detail || "Error creating movie";
         throw new Error(errorMessage);
       }
 
