@@ -3,9 +3,9 @@
 import { useAuth } from "@/components/AuthProvider";
 import { useReel } from "@/components/movie-provider";
 import { Button } from "@/components/ui/button";
-import { useCreateMovies } from "@/hooks/useCreateMovie";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useCreatePipelineReel } from "@/hooks/useCreateReelPipeline";
 
 export default function CreateReelAudio() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
@@ -19,7 +19,7 @@ export default function CreateReelAudio() {
     }
   }, [isLoadingUser, user, token, router]);
 
-  const { mutate, isPending, error, isSuccess } = useCreateMovies();
+  const { mutate, isPending, error, isSuccess } = useCreatePipelineReel();
 
   return (
     <>
@@ -28,7 +28,6 @@ export default function CreateReelAudio() {
         variant="default"
         disabled={isPending}
         onClick={() => {
-          console.log(`reel: ${reel}`);
           mutate({ reel, token });
         }}
       >

@@ -156,6 +156,7 @@ export default function CreateReelAudio() {
         onChange={setTranscriptionModel}
         value={transcriptionModel}
       >
+        <SelectItem value="none">None</SelectItem>
         <SelectItem value="tiny">tiny</SelectItem>
         <SelectItem value="base">base</SelectItem>
         <SelectItem value="small">small</SelectItem>
@@ -178,7 +179,7 @@ export default function CreateReelAudio() {
         <Button
           className="flex-1"
           variant="default"
-          onClick={() => router.push("/create-reel/submit-reel/")}
+          onClick={() => router.push("/create-reel/music/")}
         >
           Next
         </Button>

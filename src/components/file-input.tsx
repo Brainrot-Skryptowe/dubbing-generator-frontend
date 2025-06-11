@@ -4,9 +4,16 @@ import { useRef } from "react";
 interface FileInputProps {
   onFileSelect: (file: File) => void;
   value?: File | null;
+  acceptTypes: string;
+  label: string;
 }
 
-export default function FileInput({ onFileSelect, value }: FileInputProps) {
+export default function FileInput({
+  onFileSelect,
+  value,
+  acceptTypes,
+  label,
+}: FileInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -17,11 +24,11 @@ export default function FileInput({ onFileSelect, value }: FileInputProps) {
         onClick={() => inputRef.current?.click()}
         className="w-64"
       >
-        Upload MP4
+        {label}
       </Button>
       <input
         type="file"
-        accept="video/mp4"
+        accept={acceptTypes}
         ref={inputRef}
         onChange={(e) => {
           const file = e.target.files?.[0];

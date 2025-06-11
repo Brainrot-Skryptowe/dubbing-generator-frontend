@@ -6,6 +6,9 @@ export type ReelData = {
   description: string;
   nativeLang: string;
   videoFile: File | null;
+  musicFile: File | null;
+  musicTitle: string;
+  musicVolume: number;
   subtitlesText: string;
   voice: string;
   audioLang: string;
@@ -18,6 +21,9 @@ type ReelContextType = {
   description: string;
   nativeLang: string;
   videoFile: File | null;
+  musicFile: File | null;
+  musicTitle: string;
+  musicVolume: number;
   subtitlesText: string;
   voice: string;
   audioLang: string;
@@ -27,11 +33,14 @@ type ReelContextType = {
   setDescription: (description: string) => void;
   setNativeLang: (lang: string) => void;
   setVideoFile: (file: File | null) => void;
+  setMusicFile: (file: File | null) => void;
+  setMusicTitle: (title: string) => void;
+  setMusicVolume: (volume: number) => void;
   setSubtitlesText: (subtitlesText: string) => void;
   setVoice: (voice: string) => void;
   setAudioLang: (audioLang: string) => void;
   setSpeed: (speed: number) => void;
-  setTranscriptionModel: (transcriptionMode: string) => void;
+  setTranscriptionModel: (transcriptionModel: string) => void;
   clearReel: () => void;
   getReel: () => ReelData;
 };
@@ -44,15 +53,19 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
     description: "",
     nativeLang: "English",
     videoFile: null,
+    musicFile: null,
+    musicTitle: "",
+    musicVolume: 0.2,
     subtitlesText: "",
     voice: "",
     audioLang: "",
-    speed: 0.2,
+    speed: 1,
     transcriptionModel: "tiny",
   };
 
-  const setTitle = (title: string) => setReel((prev) => ({ ...prev, title }));
   const [reel, setReel] = useState<ReelData>(initialReelState);
+
+  const setTitle = (title: string) => setReel((prev) => ({ ...prev, title }));
 
   const setDescription = (description: string) =>
     setReel((prev) => ({ ...prev, description }));
@@ -63,20 +76,27 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
   const setVideoFile = (file: File | null) =>
     setReel((prev) => ({ ...prev, videoFile: file }));
 
-  const setSubtitlesText = (subtitlesText: string) =>
-    setReel((prev) => ({ ...prev, subtitlesText: subtitlesText }));
+  const setMusicFile = (file: File | null) =>
+    setReel((prev) => ({ ...prev, musicFile: file }));
 
-  const setVoice = (voice: string) =>
-    setReel((prev) => ({ ...prev, voice: voice }));
+  const setMusicTitle = (title: string) =>
+    setReel((prev) => ({ ...prev, musicTitle: title }));
+
+  const setMusicVolume = (volume: number) =>
+    setReel((prev) => ({ ...prev, musicVolume: volume }));
+
+  const setSubtitlesText = (subtitlesText: string) =>
+    setReel((prev) => ({ ...prev, subtitlesText }));
+
+  const setVoice = (voice: string) => setReel((prev) => ({ ...prev, voice }));
 
   const setAudioLang = (audioLang: string) =>
-    setReel((prev) => ({ ...prev, audioLang: audioLang }));
+    setReel((prev) => ({ ...prev, audioLang }));
 
-  const setSpeed = (speed: number) =>
-    setReel((prev) => ({ ...prev, speed: speed }));
+  const setSpeed = (speed: number) => setReel((prev) => ({ ...prev, speed }));
 
   const setTranscriptionModel = (transcriptionModel: string) =>
-    setReel((prev) => ({ ...prev, transcriptionModel: transcriptionModel }));
+    setReel((prev) => ({ ...prev, transcriptionModel }));
 
   const getReel = () => reel;
 
@@ -93,6 +113,12 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
         setNativeLang,
         videoFile: reel.videoFile,
         setVideoFile,
+        musicFile: reel.musicFile,
+        setMusicFile,
+        musicTitle: reel.musicTitle,
+        setMusicTitle,
+        musicVolume: reel.musicVolume,
+        setMusicVolume,
         subtitlesText: reel.subtitlesText,
         setSubtitlesText,
         voice: reel.voice,
@@ -114,6 +140,6 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
 
 export const useReel = () => {
   const context = useContext(ReelContext);
-  if (!context) throw new Error("useReel must be used within an ReelProvider");
+  if (!context) throw new Error("useReel must be used within a ReelProvider");
   return context;
 };
