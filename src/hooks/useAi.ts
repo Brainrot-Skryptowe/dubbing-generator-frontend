@@ -16,12 +16,6 @@ export function useTextGenerator() {
       target_lang,
       token,
     }: TextGenerator) => {
-      console.log("Generating with:", {
-        description,
-        duration,
-        target_lang,
-        token,
-      });
 
       if (!token) throw new Error("Brak tokenu – użytkownik niezalogowany");
       const response = await fetch(`${API_BASE_URL}/reel-texts/`, {
@@ -44,7 +38,6 @@ export function useTextGenerator() {
       }
 
       const result = await response.json();
-      console.log("✅ Generated text result:", result);
       return result;
     },
   });
