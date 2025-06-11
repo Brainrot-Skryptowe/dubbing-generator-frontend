@@ -1,22 +1,27 @@
 import { useMutation } from "@tanstack/react-query";
 import { API_BASE_URL } from "@/config/constants";
 
-type TextGenerator = {
+type TextGeneratorArgs = {
   description: string;
   duration: number;
   target_lang: string;
   token: string | undefined;
 };
 
+type TextGeneratorResponse = {
+  text: string;
+};
+
 export function useTextGenerator() {
-  return useMutation({
+  return useMutation<TextGeneratorResponse, Error, TextGeneratorArgs>({
     mutationFn: async ({
-      description,
-      duration,
-      target_lang,
-      token,
-    }: TextGenerator) => {
-      if (!token) throw new Error("Brak tokenu – użytkownik niezalogowany");
+                         description,
+                         duration,
+                         target_lang,
+                         token,
+                       }: TextGeneratorArgs) => {
+      if (!token) throw new Error("Token is missing – user not logged in");
+
       const response = await fetch(`${API_BASE_URL}/reel-texts/`, {
         method: "POST",
         headers: {
@@ -32,11 +37,12 @@ export function useTextGenerator() {
 
       if (!response.ok) {
         const errorMessage =
-          (await response.json())?.detail || "Błąd przy generowaniu tekstu";
+            (await response.json())?.detail || "Error generating text";
         throw new Error(errorMessage);
       }
 
-      return await response.json();
+      const result: TextGeneratorResponse = await response.json();
+      return result;
     },
   });
 }

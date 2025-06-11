@@ -13,21 +13,30 @@ type CreateReelPipelineArgs = {
   token?: string;
 };
 
+type CreateReelPipelineResponse = {
+  movieId: number;
+  audioId: number;
+  musicId: number;
+  reelId: number;
+};
+
 export function useCreatePipelineReel() {
   const { mutateAsync: createMusic } = useCreateMusic();
   const { mutateAsync: createAudio } = useCreateAudio();
   const { mutateAsync: createMovie } = useCreateMovies();
   const { mutateAsync: createReel } = useCreateReels();
   const { mutateAsync: createAudioTranscription } =
-    useCreateAudioTranscription();
+      useCreateAudioTranscription();
 
-  return useMutation({
-    mutationFn: async ({ reel, token }: CreateReelPipelineArgs) => {
+  return useMutation<CreateReelPipelineResponse, Error, CreateReelPipelineArgs>({
+    mutationFn: async ({ reel, token }) => {
       try {
         const movie = await createMovie({ reel, token });
         const audio = await createAudio({ reel, token });
+
         const { transcriptionModel, musicVolume } = reel;
         const includeSrt = transcriptionModel !== "none";
+
         if (includeSrt) {
           await createAudioTranscription({
             audioId: audio.id,
@@ -35,8 +44,10 @@ export function useCreatePipelineReel() {
             token,
           });
         }
+
         const music = await createMusic({ reel, token });
-        await createReel({
+
+        const reelResult = await createReel({
           movieId: movie.id,
           audioId: audio.id,
           musicId: music.id,
@@ -44,8 +55,15 @@ export function useCreatePipelineReel() {
           includeSrt,
           token,
         });
+
+        return {
+          movieId: movie.id,
+          audioId: audio.id,
+          musicId: music.id,
+          reelId: reelResult.id,
+        };
       } catch (error) {
-        console.error("Error in reel pipeline:", error);
+        console.error("❌ Error in reel pipeline:", error);
         throw error;
       }
     },

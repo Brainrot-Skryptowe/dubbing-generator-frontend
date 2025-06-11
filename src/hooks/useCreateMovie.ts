@@ -7,16 +7,54 @@ type CreateMovieArgs = {
   token?: string;
 };
 
+type Srt = {
+  id: number;
+  audio_id: number;
+  created_at: string;
+  file_path: string;
+};
+
+type Audio = {
+  id: number;
+  title: string;
+  text: string;
+  voice: string;
+  language: string;
+  speed: number | null;
+  file_path: string;
+  created_at: string;
+  srt: Srt | null;
+};
+
+type Reel = {
+  id: number;
+  lang: string;
+  file_path: string | null;
+  movie_id: number;
+  author: number;
+  audio: Audio | null;
+};
+
+type CreateMovieResponse = {
+  id: number;
+  title: string;
+  description: string | null;
+  native_lang: string | null;
+  created_at: string;
+  author: number;
+  type: string | null;
+  duration: number | null;
+  file_path: string | null;
+  thumbnail_path: string | null;
+  reels: Reel[];
+};
+
 export function useCreateMovies() {
-  return useMutation({
+  return useMutation<CreateMovieResponse, Error, CreateMovieArgs>({
     mutationFn: async ({ reel, token }: CreateMovieArgs) => {
-      console.log("reel:", reel);
       const { title, description, nativeLang, videoFile } = reel;
 
-      console.log("token:", token);
-      console.log("reel:", reel);
-
-      if (!token) throw new Error("Brak tokenu – użytkownik niezalogowany");
+      if (!token) throw new Error("Token is missing – user not logged in");
 
       const formData = new FormData();
       formData.append("title", title);
@@ -34,11 +72,12 @@ export function useCreateMovies() {
 
       if (!movieRes.ok) {
         const errorMessage =
-          (await movieRes.json())?.detail || "Błąd przy tworzeniu filmu";
+            (await movieRes.json())?.detail || "Error creating movie";
         throw new Error(errorMessage);
       }
 
-      return await movieRes.json();
+      const result: CreateMovieResponse = await movieRes.json();
+      return result;
     },
   });
 }
