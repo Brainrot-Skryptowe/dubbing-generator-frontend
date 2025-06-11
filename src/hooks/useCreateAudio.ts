@@ -50,7 +50,7 @@ export function useCreateAudioTranscription() {
         audio_id: audioId,
         transcription_model: transcriptionModel,
       });
-      console.log("Creating audio with body:", body);
+      console.log("Creating audio transcript with body:", body);
       const response = await fetch(`${API_BASE_URL}/audios/transcribe`, {
         method: "POST",
         headers: {
