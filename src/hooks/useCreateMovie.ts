@@ -38,9 +38,7 @@ export function useCreateMovies() {
         throw new Error(errorMessage);
       }
 
-      const movieData = await movieRes.json();
-      console.log(`movie id : ${movieData.id}`);
-      return movieData;
+      return await movieRes.json();
     },
   });
 }

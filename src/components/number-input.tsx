@@ -14,7 +14,7 @@ interface NumberInputFormProps {
 
 export default function NumberInputForm({
   label,
-  placeholder = "Wprowadź liczbę",
+  placeholder = "Enter a number",
   value,
   onChange,
   disabled,

@@ -4,23 +4,20 @@ import React, { useEffect } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { useRouter } from "next/navigation";
 import InputForm from "@/components/input-form";
-import { SelectItem } from "@/components/ui/select";
-import SelectForm from "@/components/select-form";
 import FileInput from "@/components/file-input";
 import { useReel } from "@/components/movie-provider";
 import { Button } from "@/components/ui/button";
+import NumberInputForm from "@/components/number-input";
 
 export default function CreateReelUploadMovie() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
   const {
-    title,
-    setTitle,
-    description,
-    setDescription,
-    nativeLang,
-    setNativeLang,
-    videoFile,
-    setVideoFile,
+    musicTitle,
+    setMusicTitle,
+    musicFile,
+    setMusicFile,
+    musicVolume,
+    setMusicVolume,
     clearReel,
   } = useReel();
   const router = useRouter();
@@ -34,60 +31,48 @@ export default function CreateReelUploadMovie() {
   return (
     <div className="flex flex-col text-white gap-4">
       <h1 className="text-2xl w-96 md:w-150 lg:w-216 xl:w-256 font-bold mb-4 text-center">
-        Upload movie
+        Upload music
       </h1>
       <InputForm
         name="Title"
-        placeholder="Movie 1"
+        placeholder="Music 1"
         type="title"
-        onChange={setTitle}
-        value={title}
+        onChange={setMusicTitle}
+        value={musicTitle}
       />
-
-      <InputForm
-        name="Description"
-        placeholder="Fun fact about ..."
-        type="description"
-        onChange={setDescription}
-        value={description}
-      />
-
-      <SelectForm
-        label="Original language"
-        value={nativeLang}
-        onChange={setNativeLang}
-      >
-        <SelectItem value="English">English</SelectItem>
-        <SelectItem value="Polish">Polish</SelectItem>
-        <SelectItem value="German">German</SelectItem>
-        <SelectItem value="Spanish">Spanish</SelectItem>
-        <SelectItem value="Italian">Italian</SelectItem>
-        <SelectItem value="French">French</SelectItem>
-        <SelectItem value="Portuguese">Portuguese</SelectItem>
-      </SelectForm>
 
       <FileInput
-        onFileSelect={setVideoFile}
-        value={videoFile}
-        acceptTypes={"video/mp4"}
-        label={"Upload MP4"}
+        onFileSelect={setMusicFile}
+        value={musicFile}
+        acceptTypes={"audio/wav"}
+        label={"Upload WAV"}
+      />
+
+      <NumberInputForm
+        label="Music volume"
+        value={musicVolume}
+        onChange={setMusicVolume}
+        min={0}
+        max={1}
+        step={0.1}
       />
 
       <div className="flex gap-4 mt-4 mb-12">
         <Button
           className="flex-1"
           variant="outline"
+          type="button"
           onClick={() => {
-            clearReel();
+            router.back();
           }}
         >
-          Clear
+          Back
         </Button>
         <Button
           className="flex-1"
           variant="default"
           onClick={() => {
-            router.push("/create-reel/reels-manager");
+            router.push("/create-reel/submit-reel");
           }}
         >
           Next
