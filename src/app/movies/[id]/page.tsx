@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ItemWithIcon } from "@/components/item-with-icon";
-import { Calendar, Clock4, Languages } from "lucide-react";
+import { Calendar, Clock4, Languages, X } from "lucide-react";
 import SelectForm from "@/components/select-form";
 import { SelectItem } from "@/components/ui/select";
 
@@ -17,6 +17,7 @@ export default function MovieDetails() {
   const params = useParams();
   const id = Number(params?.id);
   const [reelId, setReelId] = useState<number | undefined>();
+  const [showPreview, setShowPreview] = useState(false);
 
   const { data: movieDetails, isLoading: isLoading } = useMovieWithReels(
     id,
@@ -48,6 +49,7 @@ export default function MovieDetails() {
           alt="Button Icon"
           height={216}
           width={216}
+          onClick={() => setShowPreview(true)}
         />
         <div className="flex flex-col">
           <h1 className="text-lg font-bold mt-6">Description</h1>
@@ -112,6 +114,35 @@ export default function MovieDetails() {
           Add reel
         </Button>
       </div>
+
+      {showPreview && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90"
+          onClick={() => setShowPreview(false)}
+        >
+          <div
+            className="relative max-w-4xl w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="absolute top-2 right-2 z-10 text-white bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-80"
+              onClick={() => setShowPreview(false)}
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <video
+              src={
+                reelId !== undefined
+                  ? movieDetails.reels[reelId].file_path
+                  : movieDetails.file_path
+              }
+              controls
+              autoPlay
+              className="w-full h-[70vh] rounded bg-black"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
