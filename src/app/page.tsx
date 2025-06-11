@@ -21,11 +21,15 @@ export default function Page() {
   );
   const router = useRouter();
 
+  console.log(`token: ${token}`);
+  console.log(`user: ${user}`);
+  console.log(`loading: ${isLoadingUser}`);
+
   useEffect(() => {
-    if (!isLoadingUser && !user) {
+    if (!isLoadingUser && (!token || !user)) {
       router.push("/login");
     }
-  }, [isLoadingUser, user, router]);
+  }, [isLoadingUser, user, token, router]);
 
   if (isLoadingUser || isLoadingMovies || !user || !movies_data)
     return loading();

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+
 import { useLogin } from "@/hooks/useLogin";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
@@ -10,6 +10,7 @@ import LinkForm from "@/components/link-form";
 import ErrorWidget from "@/components/error";
 import GoogleAuthButton from "@/components/google-auth-button";
 import loading from "@/components/ui/loading";
+import { useState } from "react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -18,7 +19,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const login = useLogin();
   const router = useRouter();
-  const { setToken, token } = useAuth();
+  const { user, setToken, token } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,12 +38,11 @@ export default function LoginPage() {
     }
   };
 
-  console.log(errorMessage);
   if (isLoading) {
     return loading();
   }
 
-  if (token) {
+  if (token && user) {
     setIsLoading(true);
     router.push("/");
   }
