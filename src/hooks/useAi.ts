@@ -37,8 +37,7 @@ export function useTextGenerator() {
         throw new Error(errorMessage);
       }
 
-      const result = await response.json();
-      return result;
+      return await response.json();
     },
   });
 }
