@@ -57,11 +57,13 @@ export default function CreateReelUploadMovie() {
         value={nativeLang}
         onChange={setNativeLang}
       >
-        <SelectItem value="en">English</SelectItem>
-        <SelectItem value="pl">Polish</SelectItem>
-        <SelectItem value="de">German</SelectItem>
-        <SelectItem value="es">Spanish</SelectItem>
-        <SelectItem value="fr">French</SelectItem>
+        <SelectItem value="English">English</SelectItem>
+        <SelectItem value="Polish">Polish</SelectItem>
+        <SelectItem value="German">German</SelectItem>
+        <SelectItem value="Spanish">Spanish</SelectItem>
+        <SelectItem value="Italian">Italian</SelectItem>
+        <SelectItem value="French">French</SelectItem>
+        <SelectItem value="Portuguese">Portuguese</SelectItem>
       </SelectForm>
 
       <FileInput onFileSelect={setVideoFile} value={videoFile} />
