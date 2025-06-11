@@ -4,16 +4,19 @@ import { useAuth } from "@/components/AuthProvider";
 import loading from "@/components/ui/loading";
 import { useMovieWithReels } from "@/hooks/useMovies";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ItemWithIcon } from "@/components/item-with-icon";
 import { Calendar, Clock4, Languages } from "lucide-react";
+import SelectForm from "@/components/select-form";
+import { SelectItem } from "@/components/ui/select";
 
 export default function MovieDetails() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
   const params = useParams();
   const id = Number(params?.id);
+  const [reelId, setReelId] = useState<number | undefined>();
 
   const { data: movieDetails, isLoading: isLoading } = useMovieWithReels(
     id,
@@ -32,7 +35,9 @@ export default function MovieDetails() {
 
   if (isLoadingUser || isLoading || !user || !movieDetails) return loading();
 
-  console.log(movieDetails);
+  const handleReelChange = (value: string) => {
+    setReelId(Number(value));
+  };
 
   return (
     <div className="flex flex-col text-white items-center gap-8 mb-12 mx-36">
@@ -71,7 +76,17 @@ export default function MovieDetails() {
 
           <h1 className="text-lg font-bold mt-6">Reels</h1>
           {movieDetails.reels.length !== 0 ? (
-            <p className="text-base">🎬 This movie has reels!</p>
+            <SelectForm
+              label="Choose reel"
+              onChange={handleReelChange}
+              value={reelId !== undefined ? String(reelId) : ""}
+            >
+              {movieDetails.reels.map((reel, index) => (
+                <SelectItem key={reel.id} value={String(index)}>
+                  Reel {index + 1}
+                </SelectItem>
+              ))}
+            </SelectForm>
           ) : (
             <p className="text-base">No reels yet. Add your first one below!</p>
           )}
