@@ -18,7 +18,6 @@ export default function CreateReelUploadMovie() {
     setMusicFile,
     musicVolume,
     setMusicVolume,
-    clearReel,
   } = useReel();
   const router = useRouter();
 
