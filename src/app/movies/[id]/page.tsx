@@ -90,7 +90,9 @@ export default function MovieDetails() {
           className="flex-1 mt-2"
           variant="default"
           type="button"
-          onClick={() => {}}
+          onClick={() => {
+            router.push(`/add-reel-to-movie/${id}`);
+          }}
         >
           Add reel
         </Button>
