@@ -1,12 +1,12 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
 
 interface InputFormProps {
   name: string;
   placeholder?: string;
   type?: string;
   disabled?: boolean;
+  value?: string;
   onChange?: (value: string) => void;
 }
 
@@ -15,12 +15,10 @@ export default function InputForm({
   placeholder = "",
   type = "text",
   disabled = false,
+  value,
   onChange,
 }: InputFormProps) {
-  const [value, setValue] = useState("");
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
     onChange?.(e.target.value);
   };
 
