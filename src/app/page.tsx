@@ -21,10 +21,6 @@ export default function Page() {
   );
   const router = useRouter();
 
-  console.log(`token: ${token}`);
-  console.log(`user: ${user}`);
-  console.log(`loading: ${isLoadingUser}`);
-
   useEffect(() => {
     if (!isLoadingUser && (!token || !user)) {
       router.push("/login");

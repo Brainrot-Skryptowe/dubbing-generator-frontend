@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useState, ReactNode } from "react";
 
-type ReelData = {
+export type ReelData = {
   title: string;
   description: string;
   nativeLang: string;
@@ -27,6 +27,7 @@ type ReelContextType = {
   setVoice: (voice: string) => void;
   setAudioLang: (audioLang: string) => void;
   clearReel: () => void;
+  getReel: () => ReelData;
 };
 
 const ReelContext = createContext<ReelContextType | undefined>(undefined);
@@ -63,6 +64,8 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
   const setAudioLang = (audioLang: string) =>
     setReel((prev) => ({ ...prev, audioLang: audioLang }));
 
+  const getReel = () => reel;
+
   const clearReel = () => setReel(initialReelState);
 
   return (
@@ -82,6 +85,7 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
         setVoice,
         audioLang: reel.audioLang,
         setAudioLang,
+        getReel,
         clearReel,
       }}
     >

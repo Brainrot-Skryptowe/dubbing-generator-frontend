@@ -6,6 +6,7 @@ import { useReel } from "@/components/movie-provider";
 import SelectForm from "@/components/select-form";
 import { Button } from "@/components/ui/button";
 import { SelectItem } from "@/components/ui/select";
+import { VOICE_OPTIONS } from "@/config/constants";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -20,9 +21,10 @@ export default function CreateReelAudio() {
     setAudioLang,
   } = useReel();
   const router = useRouter();
+  const filteredVoices = VOICE_OPTIONS[audioLang] || [];
 
   useEffect(() => {
-    if (!isLoadingUser && !user && !token) {
+    if (!isLoadingUser && (!token || !user)) {
       router.push("/login");
     }
   }, [isLoadingUser, user, token, router]);
@@ -41,20 +43,6 @@ export default function CreateReelAudio() {
         value={subtitlesText}
       />
 
-      <SelectForm label="Voice" onChange={setVoice} value={voice}>
-        <SelectItem value="af">English (af)</SelectItem>
-        <SelectItem value="am">English (am)</SelectItem>
-        <SelectItem value="bf">English (bf)</SelectItem>
-        <SelectItem value="bm">English (bm)</SelectItem>
-        <SelectItem value="ef">Spanish (ef)</SelectItem>
-        <SelectItem value="em">Spanish (em)</SelectItem>
-        <SelectItem value="ff">French (ff)</SelectItem>
-        <SelectItem value="if">Italian (if)</SelectItem>
-        <SelectItem value="im">Italian (im)</SelectItem>
-        <SelectItem value="pf">Portuguese (pf)</SelectItem>
-        <SelectItem value="pm">Portuguese (pm)</SelectItem>
-      </SelectForm>
-
       <SelectForm
         label="Audio language"
         onChange={setAudioLang}
@@ -65,6 +53,19 @@ export default function CreateReelAudio() {
         <SelectItem value="fr">French</SelectItem>
         <SelectItem value="itl">Italian</SelectItem>
         <SelectItem value="pr">Portuguese</SelectItem>
+      </SelectForm>
+
+      <SelectForm
+        label="Voice"
+        onChange={setVoice}
+        value={voice}
+        disabled={!audioLang}
+      >
+        {filteredVoices.map((voiceOption) => (
+          <SelectItem key={voiceOption.value} value={voiceOption.value}>
+            {voiceOption.label}
+          </SelectItem>
+        ))}
       </SelectForm>
 
       <div className="flex gap-4 mt-4 mb-12">
@@ -81,12 +82,11 @@ export default function CreateReelAudio() {
         <Button
           className="flex-1"
           variant="default"
-          //   type="submit"
+          onClick={() => router.push("/create-reel/submit-reel/")}
         >
           Next
         </Button>
       </div>
-      {/* </form> */}
     </div>
   );
 }
