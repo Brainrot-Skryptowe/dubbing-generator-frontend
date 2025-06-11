@@ -82,7 +82,7 @@ export default function CreateReelUploadMovie() {
           className="flex-1"
           variant="default"
           onClick={() => {
-            router.push("/create-reel/audio");
+            router.push("/create-reel/reels-manager");
           }}
         >
           Next
