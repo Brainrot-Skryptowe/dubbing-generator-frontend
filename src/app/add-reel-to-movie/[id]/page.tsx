@@ -30,7 +30,7 @@ export default function MovieDetails() {
   const [audioLang, setAudioLang] = useState("");
   const [speed, setSpeed] = useState(DEFAULT_SPEED);
   const [transcriptionModel, setTranscriptionModel] = useState(
-    DEFAULT_TRANSCRIPTION_MODEL
+    DEFAULT_TRANSCRIPTION_MODEL,
   );
   const [showDurationInput, setShowDurationInput] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -105,7 +105,7 @@ export default function MovieDetails() {
                     "Generating text with duration:",
                     duration,
                     "and audioLang:",
-                    audioLang
+                    audioLang,
                   );
                   const result = await generateText({
                     description: subtitlesText,
