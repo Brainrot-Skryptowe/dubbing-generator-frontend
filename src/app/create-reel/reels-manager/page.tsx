@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { useCreatePipelineReel } from "@/hooks/useCreateReelPipeline";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import SpinnerOverlay from "@/components/spinner-overlay";
+import toast from "react-hot-toast";
 
 export default function ReelsManager() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
@@ -13,7 +15,12 @@ export default function ReelsManager() {
   const { getMovieData } = useReel();
   const reel = getMovieData();
 
-  const { mutate, isPending } = useCreatePipelineReel();
+    const { mutate, isPending } = useCreatePipelineReel({
+        onSuccess: () => {
+            toast.success("Reel created successfully!");
+            router.push("/");
+        },
+    });
 
   const router = useRouter();
 
@@ -24,6 +31,10 @@ export default function ReelsManager() {
   }, [isLoadingUser, user, token, router]);
 
   console.log(audiosWithMusic);
+
+  if (isPending) {
+    return <SpinnerOverlay />;
+ }
 
   return (
     <div className="flex flex-col text-white items-center gap-4">
