@@ -3,12 +3,17 @@
 import { useAuth } from "@/components/AuthProvider";
 import { useReel } from "@/components/movie-provider";
 import { Button } from "@/components/ui/button";
+import { useCreatePipelineReel } from "@/hooks/useCreateReelPipeline";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function ReelsManager() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
   const { audiosWithMusic } = useReel();
+  const { getMovieData } = useReel();
+  const reel = getMovieData();
+
+  const { mutate, isPending } = useCreatePipelineReel();
 
   const router = useRouter();
 
@@ -48,9 +53,10 @@ export default function ReelsManager() {
         <Button
           className="flex-1"
           variant="default"
-          onClick={() => router.push("/create-reel/submit-reel/")}
+          disabled={isPending}
+          onClick={() => mutate({ reel, token })}
         >
-          Next
+          Submit
         </Button>
       </div>
     </div>
