@@ -1,6 +1,15 @@
 import { API_BASE_URL } from "@/config/constants";
 import { useMutation } from "@tanstack/react-query";
 
+type CreateReelArgs = {
+  movieId: number;
+  audioId: number;
+  musicId?: number;
+  musicVolume?: number;
+  includeSrt?: boolean;
+  token?: string;
+};
+
 export function useCreateReels() {
   return useMutation({
     mutationFn: async ({
@@ -10,7 +19,7 @@ export function useCreateReels() {
       musicVolume,
       includeSrt,
       token,
-    }) => {
+    }: CreateReelArgs) => {
       if (!token) throw new Error("Missing auth token");
       const response = await fetch(`${API_BASE_URL}/reels/`, {
         method: "POST",

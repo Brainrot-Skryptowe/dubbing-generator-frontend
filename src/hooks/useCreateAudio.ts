@@ -8,6 +8,12 @@ type CreateAudioArgs = {
   token?: string;
 };
 
+type CreateAudioTranscriptionArgs = {
+  audioId: number;
+  transcriptionModel: string;
+  token?: string;
+};
+
 export function useCreateAudio() {
   return useMutation({
     mutationFn: async ({ title, tempAudio, token }: CreateAudioArgs) => {
@@ -43,7 +49,11 @@ export function useCreateAudio() {
 
 export function useCreateAudioTranscription() {
   return useMutation({
-    mutationFn: async ({ audioId, transcriptionModel, token }) => {
+    mutationFn: async ({
+      audioId,
+      transcriptionModel,
+      token,
+    }: CreateAudioTranscriptionArgs) => {
       if (!token) throw new Error("Missing auth token");
       const body = JSON.stringify({
         audio_id: audioId,
