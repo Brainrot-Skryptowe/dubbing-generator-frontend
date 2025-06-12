@@ -1,25 +1,22 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { useRouter } from "next/navigation";
 import InputForm from "@/components/input-form";
 import FileInput from "@/components/file-input";
-import { useReel } from "@/components/movie-provider";
 import { Button } from "@/components/ui/button";
 import NumberInputForm from "@/components/number-input";
+import { useReelData } from "@/components/reel-data-provider";
 
 export default function CreateReelUploadMovie() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
-  const {
-    musicTitle,
-    setMusicTitle,
-    musicFile,
-    setMusicFile,
-    musicVolume,
-    setMusicVolume,
-  } = useReel();
+  const { setTempMusic, getAudioWithMusic } = useReelData();
   const router = useRouter();
+
+  const [musicTitle, setMusicTitle] = useState<string>("");
+  const [musicFile, setMusicFile] = useState<File | null>(null);
+  const [musicVolume, setMusicVolume] = useState<number>(0.2);
 
   useEffect(() => {
     if (!isLoadingUser && (!token || !user)) {
@@ -71,6 +68,12 @@ export default function CreateReelUploadMovie() {
           className="flex-1"
           variant="default"
           onClick={() => {
+            setTempMusic({
+              musicFile,
+              musicTitle,
+              musicVolume,
+            });
+            // const audio = getAudioWithMusic();
             // router.push("/create-reel/submit-reel");
           }}
         >

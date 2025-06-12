@@ -3,6 +3,7 @@
 import { useAuth } from "@/components/AuthProvider";
 import InputForm from "@/components/input-form";
 import NumberInputForm from "@/components/number-input";
+import { useReelData } from "@/components/reel-data-provider";
 import SelectForm from "@/components/select-form";
 import { Button } from "@/components/ui/button";
 import { SelectItem } from "@/components/ui/select";
@@ -18,6 +19,7 @@ export default function MovieDetails() {
   const params = useParams();
   const id = Number(params?.id);
 
+  const { setTempAudio } = useReelData();
   const { mutateAsync: generateText } = useTextGenerator();
   const [subtitlesText, setSubtitlesText] = useState("");
   const [voice, setVoice] = useState("");
@@ -176,7 +178,16 @@ export default function MovieDetails() {
         <Button
           className="flex-1"
           variant="default"
-          onClick={() => router.push(`/add-music-to-reel/${id}`)}
+          onClick={() => {
+            setTempAudio({
+              subtitlesText,
+              voice,
+              audioLang,
+              speed,
+              transcriptionModel,
+            });
+            router.push(`/add-music-to-reel/${id}`);
+          }}
         >
           Next
         </Button>
