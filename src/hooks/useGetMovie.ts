@@ -1,4 +1,8 @@
-export function useMovies(movieId: number, token?: string) {
+import { API_BASE_URL } from "@/config/constants";
+import { MovieWithReels } from "@/types/movie-with-reels";
+import { useQuery } from "@tanstack/react-query";
+
+export function useMovies(sortBy: string, sortDir: string, token?: string) {
   return useQuery({
     queryKey: ["userMovies", token, sortBy, sortDir],
     queryFn: async () => {
