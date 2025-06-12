@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/components/AuthProvider";
 import loading from "@/components/ui/loading";
-import { useMovieWithReels } from "@/hooks/useMovies";
+import { useMovieDelete, useMovieWithReels } from "@/hooks/useMovies";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -11,6 +11,7 @@ import { ItemWithIcon } from "@/components/item-with-icon";
 import { Calendar, Clock4, Languages, X } from "lucide-react";
 import SelectForm from "@/components/select-form";
 import { SelectItem } from "@/components/ui/select";
+import { Trash } from "lucide-react";
 
 export default function MovieDetails() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
@@ -18,6 +19,7 @@ export default function MovieDetails() {
   const id = Number(params?.id);
   const [reelId, setReelId] = useState<number | undefined>();
   const [showPreview, setShowPreview] = useState(false);
+  const deleteMutation = useMovieDelete(token);
 
   const { data: movieDetails, isLoading: isLoading } = useMovieWithReels(
     id,
@@ -42,7 +44,31 @@ export default function MovieDetails() {
 
   return (
     <div className="flex flex-col text-white items-center gap-8 mb-12 mx-36">
-      <h1 className="text-3xl font-semibold">{movieDetails.title}</h1>
+      <div className="w-full flex items-center justify-between px-4 md:px-0">
+        <h1 className="text-3xl font-semibold text-center flex-1">
+          {movieDetails.title}
+        </h1>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hover:bg-red-600 hover:text-white ml-4"
+          onClick={() => {
+            if (!confirm("Are you sure you want to delete this movie?")) return;
+
+            deleteMutation.mutate(id, {
+              onSuccess: () => {
+                router.push("/");
+              },
+              onError: () => {
+                alert("Failed to delete the movie.");
+              },
+            });
+          }}
+        >
+          <Trash className="w-5 h-5" />
+        </Button>
+      </div>
+
       <div className="flex flex-col lg:flex-row items-center gap-24">
         <Image
           src={movieDetails.thumbnail_path}
