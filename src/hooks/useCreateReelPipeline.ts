@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, type UseMutationOptions } from "@tanstack/react-query";
 import { MovieData } from "@/components/movie-provider";
 import { useCreateMovies } from "@/hooks/useCreateMovie";
 import {
@@ -13,13 +13,15 @@ type CreateReelPipelineArgs = {
   token?: string;
 };
 
-export function useCreatePipelineReel() {
+export function useCreatePipelineReel(
+    options?: UseMutationOptions<void, unknown, CreateReelPipelineArgs>
+) {
   const { mutateAsync: createMusic } = useCreateMusic();
   const { mutateAsync: createAudio } = useCreateAudio();
   const { mutateAsync: createMovie } = useCreateMovies();
   const { mutateAsync: createReel } = useCreateReels();
   const { mutateAsync: createAudioTranscription } =
-    useCreateAudioTranscription();
+      useCreateAudioTranscription();
 
   return useMutation({
     mutationFn: async ({ reel, token }: CreateReelPipelineArgs) => {
@@ -60,5 +62,6 @@ export function useCreatePipelineReel() {
         throw error;
       }
     },
+    ...options,
   });
 }
