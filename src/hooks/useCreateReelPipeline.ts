@@ -26,7 +26,11 @@ export function useCreatePipelineReel(
   return useMutation({
     mutationFn: async ({ reel, token }: CreateReelPipelineArgs) => {
       try {
+        console.log("Creating movie");
+
         const movie = await createMovie({ reel, token });
+
+        console.log("Movie created");
 
         for (const item of reel.audiosWithMusic) {
           const audio = await createAudio({
@@ -34,6 +38,8 @@ export function useCreatePipelineReel(
             tempAudio: item.audio,
             token,
           });
+
+          console.log("Audio created");
 
           const transcriptionModel = item.audio.transcriptionModel;
           const includeSrt = transcriptionModel !== "none";
@@ -44,9 +50,13 @@ export function useCreatePipelineReel(
               transcriptionModel,
               token,
             });
+
+            console.log("Transcription created");
           }
 
           const music = await createMusic({ tempMusic: item.music, token });
+
+          console.log("Music created");
 
           await createReel({
             movieId: movie.id,
@@ -56,7 +66,11 @@ export function useCreatePipelineReel(
             includeSrt,
             token,
           });
+
+          console.log("Reel craeted");
         }
+
+        console.log("Movie created successfully");
       } catch (error) {
         console.error("Error in reel pipeline:", error);
         throw error;
