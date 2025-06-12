@@ -8,6 +8,9 @@ import FileInput from "@/components/file-input";
 import { useReel } from "@/components/movie-provider";
 import { Button } from "@/components/ui/button";
 import NumberInputForm from "@/components/number-input";
+import toast from "react-hot-toast";
+
+const DEFAULT_VOLUME = 0.2;
 
 export default function CreateReelUploadMovie() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
@@ -16,7 +19,7 @@ export default function CreateReelUploadMovie() {
 
   const [musicTitle, setMusicTitle] = useState<string>("");
   const [musicFile, setMusicFile] = useState<File | null>(null);
-  const [musicVolume, setMusicVolume] = useState<number>(0.2);
+  const [musicVolume, setMusicVolume] = useState<number>(DEFAULT_VOLUME);
 
   useEffect(() => {
     if (!isLoadingUser && (!token || !user)) {
@@ -68,13 +71,17 @@ export default function CreateReelUploadMovie() {
           className="flex-1"
           variant="default"
           onClick={() => {
-            setTempMusic({
-              musicFile,
-              musicTitle,
-              musicVolume,
-            });
-            addAudioWithMusic();
-            router.push("/create-reel/reels-manager");
+            if (musicFile && musicTitle) {
+              setTempMusic({
+                musicFile,
+                musicTitle,
+                musicVolume,
+              });
+              addAudioWithMusic();
+              router.push("/create-reel/reels-manager");
+            } else {
+              toast.error("Please fill in all the parameters!");
+            }
           }}
         >
           Add reel

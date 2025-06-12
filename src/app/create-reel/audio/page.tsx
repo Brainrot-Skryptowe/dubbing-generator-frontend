@@ -12,6 +12,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PencilLine } from "lucide-react";
 import { useTextGenerator } from "@/hooks/useAi";
+import toast from "react-hot-toast";
+
+const DEFAULT_SPEED = 1.0;
 
 export default function CreateReelAudio() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
@@ -23,7 +26,7 @@ export default function CreateReelAudio() {
   const [subtitlesText, setSubtitlesText] = useState("");
   const [voice, setVoice] = useState("");
   const [audioLang, setAudioLang] = useState("");
-  const [speed, setSpeed] = useState(0.2);
+  const [speed, setSpeed] = useState(DEFAULT_SPEED);
   const [transcriptionModel, setTranscriptionModel] = useState("tiny");
 
   const router = useRouter();
@@ -175,14 +178,18 @@ export default function CreateReelAudio() {
           className="flex-1"
           variant="default"
           onClick={() => {
-            setTempAudio({
-              subtitlesText,
-              voice,
-              audioLang,
-              speed,
-              transcriptionModel,
-            });
-            router.push("/create-reel/music");
+            if (subtitlesText && audioLang && voice) {
+              setTempAudio({
+                subtitlesText,
+                voice,
+                audioLang,
+                speed,
+                transcriptionModel,
+              });
+              router.push("/create-reel/music");
+            } else {
+              toast.error("Please fill in all the parameters!");
+            }
           }}
         >
           Next
