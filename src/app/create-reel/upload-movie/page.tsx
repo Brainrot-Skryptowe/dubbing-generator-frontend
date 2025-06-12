@@ -9,6 +9,7 @@ import SelectForm from "@/components/select-form";
 import FileInput from "@/components/file-input";
 import { useReel } from "@/components/movie-provider";
 import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
 
 export default function CreateReelUploadMovie() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
@@ -87,7 +88,9 @@ export default function CreateReelUploadMovie() {
           className="flex-1"
           variant="default"
           onClick={() => {
-            router.push("/create-reel/reels-manager");
+            if (title && description && videoFile)
+              router.push("/create-reel/reels-manager");
+            else toast.error("Please fill in all the parameters!");
           }}
         >
           Next

@@ -56,7 +56,7 @@ export default function ReelsManager() {
           variant="outline"
           type="button"
           onClick={() => {
-            router.back();
+            router.push("/create-reel/upload-movie/");
           }}
         >
           Back
