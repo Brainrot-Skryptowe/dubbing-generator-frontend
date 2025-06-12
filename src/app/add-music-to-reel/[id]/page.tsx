@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import NumberInputForm from "@/components/number-input";
 import { useReelData } from "@/components/reel-data-provider";
 import { useAddToMoviePipelineReel } from "@/hooks/useAddReelToMoviePipeline";
+import toast from "react-hot-toast";
+import SpinnerOverlay from "@/components/spinner-overlay";
 
 const DEFAULT_VOLUME = 0.2;
 
@@ -19,7 +21,16 @@ export default function CreateReelUploadMovie() {
   const params = useParams();
   const id = Number(params?.id);
 
-  const { mutate, isPending } = useAddToMoviePipelineReel();
+  const { mutate, isPending } = useAddToMoviePipelineReel({
+    onSuccess: () => {
+      toast.success("Reel created successfully!");
+      clearReelData();
+      router.push(`/movies/${id}`);
+    },
+    onError: () => {
+      toast.error("Something went wrong!");
+    },
+  });
 
   const router = useRouter();
 
@@ -32,6 +43,10 @@ export default function CreateReelUploadMovie() {
       router.push("/login");
     }
   }, [isLoadingUser, user, token, router]);
+
+  if (isPending) {
+    return <SpinnerOverlay />;
+  }
 
   return (
     <div className="flex flex-col text-white gap-4">
@@ -68,7 +83,6 @@ export default function CreateReelUploadMovie() {
           variant="outline"
           type="button"
           onClick={() => {
-            clearReelData();
             setMusicTitle("");
             setMusicFile(null);
             setMusicVolume(DEFAULT_VOLUME);
@@ -91,18 +105,22 @@ export default function CreateReelUploadMovie() {
           variant="default"
           disabled={isPending}
           onClick={() => {
-            setTempMusic({
-              musicFile,
-              musicTitle,
-              musicVolume,
-            });
-            const audioWithMusic = getAudioWithMusic();
-            console.log(`audioWithMusic: ${audioWithMusic}`);
-            if (audioWithMusic) {
-              console.log("Triggered");
-              mutate({ movieId: id, audioWithMusic, token });
+            if (musicTitle && musicFile) {
+              const music = {
+                musicFile,
+                musicTitle,
+                musicVolume,
+              };
+              setTempMusic(music);
+              const audioWithMusic = getAudioWithMusic(music);
+              if (audioWithMusic) {
+                mutate({ movieId: id, audioWithMusic, token });
+              } else {
+                toast.error("Something went wrong!");
+              }
+            } else {
+              toast.error("Not enough data!");
             }
-            router.push(`/movies/${id}`);
           }}
         >
           Add reel

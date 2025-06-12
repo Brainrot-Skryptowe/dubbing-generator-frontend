@@ -12,8 +12,9 @@ import { useTextGenerator } from "@/hooks/useAi";
 import { PencilLine } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
-const DEFAULT_SPEED = 0.2;
+const DEFAULT_SPEED = 1.0;
 const DEFAULT_TRANSCRIPTION_MODEL = "tiny";
 
 export default function MovieDetails() {
@@ -151,7 +152,7 @@ export default function MovieDetails() {
         value={speed}
         onChange={setSpeed}
         min={0}
-        max={1}
+        max={5}
         step={0.1}
       />
 
@@ -175,7 +176,6 @@ export default function MovieDetails() {
           variant="outline"
           type="button"
           onClick={() => {
-            clearReelData();
             setSubtitlesText("");
             setVoice("");
             setAudioLang("");
@@ -199,14 +199,18 @@ export default function MovieDetails() {
           className="flex-1"
           variant="default"
           onClick={() => {
-            setTempAudio({
-              subtitlesText,
-              voice,
-              audioLang,
-              speed,
-              transcriptionModel,
-            });
-            router.push(`/add-music-to-reel/${id}`);
+            if (subtitlesText != "" && voice != "" && audioLang != "") {
+              setTempAudio({
+                subtitlesText,
+                voice,
+                audioLang,
+                speed,
+                transcriptionModel,
+              });
+              router.push(`/add-music-to-reel/${id}`);
+            } else {
+              toast.error("Please fill in all the parameters!");
+            }
           }}
         >
           Next

@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import {
   useCreateAudio,
   useCreateAudioTranscription,
@@ -13,7 +13,9 @@ type AddReelToMoviePipelineArgs = {
   token?: string;
 };
 
-export function useAddToMoviePipelineReel() {
+export function useAddToMoviePipelineReel(
+  options?: UseMutationOptions<void, unknown, AddReelToMoviePipelineArgs>,
+) {
   const { mutateAsync: createMusic } = useCreateMusic();
   const { mutateAsync: createAudio } = useCreateAudio();
   const { mutateAsync: createReel } = useCreateReels();
@@ -72,5 +74,6 @@ export function useAddToMoviePipelineReel() {
         throw error;
       }
     },
+    ...options,
   });
 }
