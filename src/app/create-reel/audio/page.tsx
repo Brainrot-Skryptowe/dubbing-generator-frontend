@@ -182,7 +182,7 @@ export default function CreateReelAudio() {
               speed,
               transcriptionModel,
             });
-            router.push("create-reel");
+            router.push("/create-reel/music");
           }}
         >
           Next

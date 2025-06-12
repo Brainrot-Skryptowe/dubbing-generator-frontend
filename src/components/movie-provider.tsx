@@ -17,7 +17,7 @@ type Audio = {
 
 type AudioWithMusic = {
   audio: Audio;
-  music: Music | null;
+  music: Music;
 };
 
 export type ReelData = {

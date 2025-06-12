@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { useRouter } from "next/navigation";
 import InputForm from "@/components/input-form";
@@ -12,14 +12,20 @@ import NumberInputForm from "@/components/number-input";
 export default function CreateReelUploadMovie() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
   const {
-    musicTitle,
-    setMusicTitle,
-    musicFile,
-    setMusicFile,
-    musicVolume,
-    setMusicVolume,
+    // musicTitle,
+    // setMusicTitle,
+    // musicFile,
+    // setMusicFile,
+    // musicVolume,
+    // setMusicVolume,
+    setTempMusic,
+    addAudioWithMusic,
   } = useReel();
   const router = useRouter();
+
+  const [musicTitle, setMusicTitle] = useState<string>("");
+  const [musicFile, setMusicFile] = useState<File | null>(null);
+  const [musicVolume, setMusicVolume] = useState<number>(0.2);
 
   useEffect(() => {
     if (!isLoadingUser && (!token || !user)) {
@@ -71,10 +77,16 @@ export default function CreateReelUploadMovie() {
           className="flex-1"
           variant="default"
           onClick={() => {
-            router.push("/create-reel/submit-reel");
+            setTempMusic({
+              musicFile,
+              musicTitle,
+              musicVolume,
+            });
+            addAudioWithMusic();
+            router.push("/create-reel/reels-manager");
           }}
         >
-          Next
+          Add reel
         </Button>
       </div>
     </div>
