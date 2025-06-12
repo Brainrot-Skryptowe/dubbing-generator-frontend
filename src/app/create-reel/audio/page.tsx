@@ -16,20 +16,15 @@ import { useTextGenerator } from "@/hooks/useAi";
 export default function CreateReelAudio() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
   const { mutateAsync: generateText } = useTextGenerator();
-  const {
-    subtitlesText,
-    setSubtitlesText,
-    voice,
-    setVoice,
-    audioLang,
-    setAudioLang,
-    speed,
-    setSpeed,
-    transcriptionModel,
-    setTranscriptionModel,
-  } = useReel();
   const [duration, setDuration] = useState<number | undefined>(undefined);
   const [showDurationInput, setShowDurationInput] = useState(false);
+
+  const { setTempAudio } = useReel();
+  const [subtitlesText, setSubtitlesText] = useState("");
+  const [voice, setVoice] = useState("");
+  const [audioLang, setAudioLang] = useState("");
+  const [speed, setSpeed] = useState(0.2);
+  const [transcriptionModel, setTranscriptionModel] = useState("tiny");
 
   const router = useRouter();
   const filteredVoices = VOICE_OPTIONS[audioLang] || [];
@@ -179,7 +174,16 @@ export default function CreateReelAudio() {
         <Button
           className="flex-1"
           variant="default"
-          onClick={() => router.push("/create-reel/music/")}
+          onClick={() => {
+            setTempAudio({
+              subtitlesText,
+              voice,
+              audioLang,
+              speed,
+              transcriptionModel,
+            });
+            router.push("create-reel");
+          }}
         >
           Next
         </Button>
