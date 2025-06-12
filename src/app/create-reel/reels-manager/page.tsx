@@ -1,12 +1,14 @@
 "use client";
 
 import { useAuth } from "@/components/AuthProvider";
+import { useReel } from "@/components/movie-provider";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function ReelsManager() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
+  const { audiosWithMusic } = useReel();
 
   const router = useRouter();
 
@@ -22,7 +24,7 @@ export default function ReelsManager() {
         Add reels
       </h1>
 
-      <p className="mt-4">Generated reels: 4</p>
+      <p className="mt-4">Generated reels: {audiosWithMusic.length}</p>
       <Button
         className="w-128 p-6"
         variant="default"
