@@ -29,8 +29,8 @@ type MovieContextType = {
   setTempAudio: (audio: TempAudio) => void;
   setTempMusic: (music: TempMusic) => void;
   addAudioWithMusic: () => void;
-  clearReel: () => void;
-  getReel: () => MovieData;
+  clearMovieData: () => void;
+  getMovieData: () => MovieData;
 };
 
 const ReelContext = createContext<MovieContextType | undefined>(undefined);
@@ -104,8 +104,8 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
         setTempMusic,
         audiosWithMusic: reel.audiosWithMusic,
         addAudioWithMusic,
-        getReel,
-        clearReel,
+        getMovieData: getReel,
+        clearMovieData: clearReel,
       }}
     >
       {children}

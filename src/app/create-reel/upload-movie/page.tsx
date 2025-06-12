@@ -21,7 +21,7 @@ export default function CreateReelUploadMovie() {
     setNativeLang,
     videoFile,
     setVideoFile,
-    clearReel,
+    clearMovieData: clearReel,
   } = useReel();
   const router = useRouter();
 
