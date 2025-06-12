@@ -1,9 +1,9 @@
 import { API_BASE_URL } from "@/config/constants";
 import { useMutation } from "@tanstack/react-query";
-import { ReelData } from "@/components/movie-provider";
+import { MovieData } from "@/components/movie-provider";
 
 type CreateMovieArgs = {
-  reel: ReelData;
+  reel: MovieData;
   token?: string;
 };
 

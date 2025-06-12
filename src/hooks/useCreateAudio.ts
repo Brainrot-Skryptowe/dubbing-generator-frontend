@@ -1,17 +1,19 @@
 import { API_BASE_URL } from "@/config/constants";
 import { useMutation } from "@tanstack/react-query";
-import { ReelData } from "@/components/movie-provider";
+import { TempAudio } from "@/types/temp-audio";
 
 type CreateAudioArgs = {
-  reel: ReelData;
+  title: string;
+  tempAudio: TempAudio;
   token?: string;
 };
 
 export function useCreateAudio() {
   return useMutation({
-    mutationFn: async ({ reel, token }: CreateAudioArgs) => {
-      const { title, subtitlesText, voice, audioLang, speed } = reel;
-      if (!token) throw new Error("Missing auth token");
+    mutationFn: async ({ title, tempAudio, token }: CreateAudioArgs) => {
+      const { subtitlesText, voice, audioLang, speed } = tempAudio;
+      // const { title, subtitlesText, voice, audioLang, speed } = reel;
+      if (!token) throw new Error("Brak tokenu – użytkownik niezalogowany");
       const body = JSON.stringify({
         title,
         text: subtitlesText,

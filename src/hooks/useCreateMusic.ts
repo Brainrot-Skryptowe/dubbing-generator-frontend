@@ -1,17 +1,17 @@
 import { API_BASE_URL } from "@/config/constants";
 import { useMutation } from "@tanstack/react-query";
-import { ReelData } from "@/components/movie-provider";
+import { TempMusic } from "@/types/temp-music";
 
 type CreateMusicArgs = {
-  reel: ReelData;
+  tempMusic: TempMusic;
   token?: string;
 };
 
 export function useCreateMusic() {
   return useMutation({
-    mutationFn: async ({ reel, token }: CreateMusicArgs) => {
-      const { musicTitle, musicFile } = reel;
-      if (!token) throw new Error("Missing auth token");
+    mutationFn: async ({ tempMusic, token }: CreateMusicArgs) => {
+      const { musicTitle, musicFile } = tempMusic;
+      if (!token) throw new Error("Brak tokenu – użytkownik niezalogowany");
 
       const formData = new FormData();
       formData.append("title", musicTitle);

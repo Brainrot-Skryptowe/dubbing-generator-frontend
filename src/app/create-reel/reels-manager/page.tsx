@@ -18,6 +18,8 @@ export default function ReelsManager() {
     }
   }, [isLoadingUser, user, token, router]);
 
+  console.log(audiosWithMusic);
+
   return (
     <div className="flex flex-col text-white items-center gap-4">
       <h1 className="text-2xl w-96 md:w-150 lg:w-216 xl:w-256 font-bold mb-4 text-center">

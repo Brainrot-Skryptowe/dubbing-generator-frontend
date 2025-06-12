@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { ReelData } from "@/components/movie-provider";
+import { MovieData } from "@/components/movie-provider";
 import { useCreateMovies } from "@/hooks/useCreateMovie";
 import {
   useCreateAudio,
@@ -9,7 +9,7 @@ import { useCreateReels } from "@/hooks/useCreateReel";
 import { useCreateMusic } from "@/hooks/useCreateMusic";
 
 type CreateReelPipelineArgs = {
-  reel: ReelData;
+  reel: MovieData;
   token?: string;
 };
 
@@ -25,25 +25,36 @@ export function useCreatePipelineReel() {
     mutationFn: async ({ reel, token }: CreateReelPipelineArgs) => {
       try {
         const movie = await createMovie({ reel, token });
-        const audio = await createAudio({ reel, token });
-        const { transcriptionModel, musicVolume } = reel;
-        const includeSrt = transcriptionModel !== "none";
-        if (includeSrt) {
-          await createAudioTranscription({
+
+        for (const item of reel.audiosWithMusic) {
+          const audio = await createAudio({
+            title: reel.title,
+            tempAudio: item.audio,
+            token,
+          });
+
+          const transcriptionModel = item.audio.transcriptionModel;
+          const includeSrt = transcriptionModel !== "none";
+
+          if (includeSrt) {
+            await createAudioTranscription({
+              audioId: audio.id,
+              transcriptionModel,
+              token,
+            });
+          }
+
+          const music = await createMusic({ tempMusic: item.music, token });
+
+          await createReel({
+            movieId: movie.id,
             audioId: audio.id,
-            transcriptionModel,
+            musicId: music.id,
+            musicVolume: item.music.musicVolume,
+            includeSrt,
             token,
           });
         }
-        const music = await createMusic({ reel, token });
-        await createReel({
-          movieId: movie.id,
-          audioId: audio.id,
-          musicId: music.id,
-          musicVolume,
-          includeSrt,
-          token,
-        });
       } catch (error) {
         console.error("Error in reel pipeline:", error);
         throw error;
