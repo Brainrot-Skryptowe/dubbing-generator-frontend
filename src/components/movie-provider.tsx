@@ -1,6 +1,25 @@
 "use client";
 import { createContext, useContext, useState, ReactNode } from "react";
 
+type Music = {
+  musicFile: File | null;
+  musicTitle: string;
+  musicVolume: number;
+};
+
+type Audio = {
+  subtitlesText: string;
+  voice: string;
+  audioLang: string;
+  speed: number;
+  transcriptionModel: string;
+};
+
+type AudioWithMusic = {
+  audio: Audio;
+  music: Music | null;
+};
+
 export type ReelData = {
   title: string;
   description: string;
@@ -14,6 +33,9 @@ export type ReelData = {
   audioLang: string;
   speed: number;
   transcriptionModel: string;
+  tempAudio: Audio | null;
+  tempMusic: Music | null;
+  audiosWithMusic: AudioWithMusic[];
 };
 
 type ReelContextType = {
@@ -29,6 +51,9 @@ type ReelContextType = {
   audioLang: string;
   speed: number;
   transcriptionModel: string;
+  tempAudio: Audio | null;
+  tempMusic: Music | null;
+  audiosWithMusic: AudioWithMusic[];
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
   setNativeLang: (lang: string) => void;
@@ -41,6 +66,9 @@ type ReelContextType = {
   setAudioLang: (audioLang: string) => void;
   setSpeed: (speed: number) => void;
   setTranscriptionModel: (transcriptionModel: string) => void;
+  setTempAudio: (audio: Audio) => void;
+  setTempMusic: (music: Music) => void;
+  addAudioWithMusic: () => void;
   clearReel: () => void;
   getReel: () => ReelData;
 };
@@ -61,6 +89,9 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
     audioLang: "",
     speed: 1,
     transcriptionModel: "tiny",
+    tempAudio: null,
+    tempMusic: null,
+    audiosWithMusic: [],
   };
 
   const [reel, setReel] = useState<ReelData>(initialReelState);
@@ -98,6 +129,30 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
   const setTranscriptionModel = (transcriptionModel: string) =>
     setReel((prev) => ({ ...prev, transcriptionModel }));
 
+  const setTempAudio = (tempAudio: Audio) =>
+    setReel((prev) => ({ ...prev, tempAudio }));
+
+  const setTempMusic = (tempMusic: Music) =>
+    setReel((prev) => ({ ...prev, tempMusic }));
+
+  const addAudioWithMusic = () => {
+    setReel((prev) => {
+      if (prev.tempAudio && prev.tempMusic) {
+        const newAudioWithMusic: AudioWithMusic = {
+          audio: prev.tempAudio,
+          music: prev.tempMusic,
+        };
+        return {
+          ...prev,
+          audiosWithMusic: [...prev.audiosWithMusic, newAudioWithMusic],
+          tempAudio: null,
+          tempMusic: null,
+        };
+      }
+      return prev; // nic nie zmieniaj, jeśli któryś nie istnieje
+    });
+  };
+
   const getReel = () => reel;
 
   const clearReel = () => setReel(initialReelState);
@@ -129,6 +184,12 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
         setSpeed,
         transcriptionModel: reel.transcriptionModel,
         setTranscriptionModel,
+        tempAudio: reel.tempAudio,
+        setTempAudio,
+        tempMusic: reel.tempMusic,
+        setTempMusic,
+        audiosWithMusic: reel.audiosWithMusic,
+        addAudioWithMusic,
         getReel,
         clearReel,
       }}
