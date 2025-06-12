@@ -4,6 +4,7 @@ import { useAuth } from "./AuthProvider";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function NavBar() {
   const { user, isLoading, setToken } = useAuth();
@@ -19,7 +20,7 @@ export default function NavBar() {
   return (
     <div>
       <nav className="text-white flex flex-col md:flex-row items-center gap-4 py-6 md:mx-24 lg:mx-36 xl:mx-64">
-        <div className="flex items-center">
+        <Link href="/" className="flex items-center">
           {avatar ? (
             <Image
               width={96}
@@ -38,7 +39,7 @@ export default function NavBar() {
             <h1 className="text-2xl font-bold">{user.nick}</h1>
             <h2 className="mt-2">{user.email}</h2>
           </div>
-        </div>
+        </Link>
 
         <div className="flex mt-4 md:mt-0 md:ml-auto gap-4">
           <Button
