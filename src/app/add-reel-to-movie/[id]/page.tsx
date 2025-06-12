@@ -13,26 +13,31 @@ import { PencilLine } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+const DEFAULT_SPEED = 0.2;
+const DEFAULT_TRANSCRIPTION_MODEL = "tiny";
+
 export default function MovieDetails() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
 
   const params = useParams();
   const id = Number(params?.id);
 
-  const { setTempAudio } = useReelData();
+  const { setTempAudio, clearReelData } = useReelData();
   const { mutateAsync: generateText } = useTextGenerator();
   const [subtitlesText, setSubtitlesText] = useState("");
   const [voice, setVoice] = useState("");
   const [audioLang, setAudioLang] = useState("");
-  const [speed, setSpeed] = useState(0.2);
-  const [transcriptionModel, setTranscriptionModel] = useState("tiny");
+  const [speed, setSpeed] = useState(DEFAULT_SPEED);
+  const [transcriptionModel, setTranscriptionModel] = useState(
+    DEFAULT_TRANSCRIPTION_MODEL,
+  );
   const [showDurationInput, setShowDurationInput] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [duration, setDuration] = useState<number | undefined>(undefined);
 
-  const filteredVoices = VOICE_OPTIONS[audioLang] || [];
-
   const router = useRouter();
+
+  const filteredVoices = VOICE_OPTIONS[audioLang] || [];
 
   useEffect(() => {
     if (!isLoadingUser && (!token || !user)) {
@@ -165,6 +170,21 @@ export default function MovieDetails() {
       </SelectForm>
 
       <div className="flex gap-4 mt-4 mb-12">
+        <Button
+          className="flex-1"
+          variant="outline"
+          type="button"
+          onClick={() => {
+            clearReelData();
+            setSubtitlesText("");
+            setVoice("");
+            setAudioLang("");
+            setSpeed(DEFAULT_SPEED);
+            setTranscriptionModel(DEFAULT_TRANSCRIPTION_MODEL);
+          }}
+        >
+          Clear
+        </Button>
         <Button
           className="flex-1"
           variant="outline"

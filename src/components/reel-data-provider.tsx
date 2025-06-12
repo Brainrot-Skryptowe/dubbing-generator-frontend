@@ -22,7 +22,7 @@ const ReelDataContextType = createContext<ReelDataContextType | undefined>(
   undefined,
 );
 
-export const ReelProvider = ({ children }: { children: ReactNode }) => {
+export const ReelDataProvider = ({ children }: { children: ReactNode }) => {
   const initialReelState: ReelData = {
     tempAudio: null,
     tempMusic: null,
@@ -64,6 +64,7 @@ export const ReelProvider = ({ children }: { children: ReactNode }) => {
 
 export const useReelData = () => {
   const context = useContext(ReelDataContextType);
-  if (!context) throw new Error("useReel must be used within a ReelProvider");
+  if (!context)
+    throw new Error("useReelData must be used within a ReelProvider");
   return context;
 };
