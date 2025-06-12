@@ -14,7 +14,7 @@ type ReelDataContextType = {
   tempMusic: TempMusic | null;
   setTempAudio: (audio: TempAudio) => void;
   setTempMusic: (music: TempMusic) => void;
-  getAudioWithMusic: () => AudioWithMusic | null;
+  getAudioWithMusic: (music: TempMusic | null) => AudioWithMusic | null;
   clearReelData: () => void;
 };
 
@@ -36,11 +36,19 @@ export const ReelDataProvider = ({ children }: { children: ReactNode }) => {
   const setTempMusic = (tempMusic: TempMusic) =>
     setReel((prev) => ({ ...prev, tempMusic }));
 
-  const getAudioWithMusic = (): AudioWithMusic | null => {
+  const getAudioWithMusic = (
+    music: TempMusic | null = null,
+  ): AudioWithMusic | null => {
     const { tempAudio, tempMusic } = reelData;
-    if (tempAudio && tempMusic) {
-      return { audio: tempAudio, music: tempMusic };
+    if (tempAudio) {
+      if (music) {
+        return { audio: tempAudio, music: music };
+      }
+      if (tempMusic) {
+        return { audio: tempAudio, music: tempMusic };
+      }
     }
+
     return null;
   };
 
