@@ -11,16 +11,7 @@ import NumberInputForm from "@/components/number-input";
 
 export default function CreateReelUploadMovie() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
-  const {
-    // musicTitle,
-    // setMusicTitle,
-    // musicFile,
-    // setMusicFile,
-    // musicVolume,
-    // setMusicVolume,
-    setTempMusic,
-    addAudioWithMusic,
-  } = useReel();
+  const { setTempMusic, addAudioWithMusic } = useReel();
   const router = useRouter();
 
   const [musicTitle, setMusicTitle] = useState<string>("");
