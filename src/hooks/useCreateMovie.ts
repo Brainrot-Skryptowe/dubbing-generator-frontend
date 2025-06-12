@@ -10,13 +10,8 @@ type CreateMovieArgs = {
 export function useCreateMovies() {
   return useMutation({
     mutationFn: async ({ reel, token }: CreateMovieArgs) => {
-      console.log("reel:", reel);
       const { title, description, nativeLang, videoFile } = reel;
-
-      console.log("token:", token);
-      console.log("reel:", reel);
-
-      if (!token) throw new Error("Brak tokenu – użytkownik niezalogowany");
+      if (!token) throw new Error("Missing auth token");
 
       const formData = new FormData();
       formData.append("title", title);
@@ -34,7 +29,7 @@ export function useCreateMovies() {
 
       if (!movieRes.ok) {
         const errorMessage =
-          (await movieRes.json())?.detail || "Błąd przy tworzeniu filmu";
+          (await movieRes.json())?.detail || "Error creating movie";
         throw new Error(errorMessage);
       }
 

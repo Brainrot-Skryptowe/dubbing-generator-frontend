@@ -11,7 +11,7 @@ export function useCreateAudio() {
   return useMutation({
     mutationFn: async ({ reel, token }: CreateAudioArgs) => {
       const { title, subtitlesText, voice, audioLang, speed } = reel;
-      if (!token) throw new Error("Brak tokenu – użytkownik niezalogowany");
+      if (!token) throw new Error("Missing auth token");
       const body = JSON.stringify({
         title,
         text: subtitlesText,
@@ -19,7 +19,6 @@ export function useCreateAudio() {
         language: audioLang,
         speed,
       });
-      console.log("Creating audio with body:", body);
       const response = await fetch(`${API_BASE_URL}/audios/`, {
         method: "POST",
         headers: {
@@ -31,13 +30,11 @@ export function useCreateAudio() {
 
       if (!response.ok) {
         const errorMessage =
-          (await response.json())?.detail || "Błąd przy tworzeniu audio";
+          (await response.json())?.detail || "Error creating audio";
         throw new Error(errorMessage);
       }
 
-      const audioData = await response.json();
-      console.log(`audio id : ${audioData.id}`);
-      return audioData;
+      return await response.json();
     },
   });
 }
@@ -45,12 +42,11 @@ export function useCreateAudio() {
 export function useCreateAudioTranscription() {
   return useMutation({
     mutationFn: async ({ audioId, transcriptionModel, token }) => {
-      if (!token) throw new Error("Brak tokenu – użytkownik niezalogowany");
+      if (!token) throw new Error("Missing auth token");
       const body = JSON.stringify({
         audio_id: audioId,
         transcription_model: transcriptionModel,
       });
-      console.log("Creating audio transcript with body:", body);
       const response = await fetch(`${API_BASE_URL}/audios/transcribe`, {
         method: "POST",
         headers: {
@@ -63,7 +59,7 @@ export function useCreateAudioTranscription() {
       if (!response.ok) {
         const errorMessage =
           (await response.json())?.detail ||
-          "Błąd przy tworzeniu transkrypcji audio";
+          "Error creating audio transcription";
         throw new Error(errorMessage);
       }
 
