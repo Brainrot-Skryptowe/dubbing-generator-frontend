@@ -11,14 +11,18 @@ import toast from "react-hot-toast";
 
 export default function ReelsManager() {
   const { user, isLoading: isLoadingUser, token } = useAuth();
-  const { audiosWithMusic } = useReel();
+  const { audiosWithMusic, clearMovieData } = useReel();
   const { getMovieData } = useReel();
   const reel = getMovieData();
 
   const { mutate, isPending } = useCreatePipelineReel({
     onSuccess: () => {
       toast.success("Reel created successfully!");
+      clearMovieData();
       router.push("/");
+    },
+    onError: () => {
+      toast.error("Something went wrong!");
     },
   });
 
