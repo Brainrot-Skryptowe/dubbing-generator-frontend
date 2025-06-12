@@ -15,12 +15,12 @@ export default function ReelsManager() {
   const { getMovieData } = useReel();
   const reel = getMovieData();
 
-    const { mutate, isPending } = useCreatePipelineReel({
-        onSuccess: () => {
-            toast.success("Reel created successfully!");
-            router.push("/");
-        },
-    });
+  const { mutate, isPending } = useCreatePipelineReel({
+    onSuccess: () => {
+      toast.success("Reel created successfully!");
+      router.push("/");
+    },
+  });
 
   const router = useRouter();
 
@@ -34,7 +34,7 @@ export default function ReelsManager() {
 
   if (isPending) {
     return <SpinnerOverlay />;
- }
+  }
 
   return (
     <div className="flex flex-col text-white items-center gap-4">
