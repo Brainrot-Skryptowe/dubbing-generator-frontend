@@ -16,7 +16,7 @@ export function useTextGenerator() {
       target_lang,
       token,
     }: TextGenerator) => {
-      if (!token) throw new Error("Brak tokenu – użytkownik niezalogowany");
+      if (!token) throw new Error("Missing auth token");
       const response = await fetch(`${API_BASE_URL}/reel-texts/`, {
         method: "POST",
         headers: {
@@ -32,7 +32,7 @@ export function useTextGenerator() {
 
       if (!response.ok) {
         const errorMessage =
-          (await response.json())?.detail || "Błąd przy generowaniu tekstu";
+          (await response.json())?.detail || "Failed to generate text";
         throw new Error(errorMessage);
       }
 

@@ -8,7 +8,7 @@ export function useMovies(movieId: number, token?: string) {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         },
       );
-      if (!res.ok) throw new Error("Not authenticated");
+      if (!res.ok) throw new Error("Error fetching movies");
       return res.json();
     },
     enabled: !!token,
@@ -23,7 +23,7 @@ export function useMovieWithReels(id: string | number, token?: string) {
       const res = await fetch(`${API_BASE_URL}/movies/${id}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
-      if (!res.ok) throw new Error("Not authenticated");
+      if (!res.ok) throw new Error("Error fetching movie with reels");
       return res.json();
     },
     enabled: !!token && !!id,

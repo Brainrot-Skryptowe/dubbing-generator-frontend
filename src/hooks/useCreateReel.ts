@@ -11,7 +11,7 @@ export function useCreateReels() {
       includeSrt,
       token,
     }) => {
-      if (!token) throw new Error("Brak tokenu – użytkownik niezalogowany");
+      if (!token) throw new Error("Missing auth token");
       const response = await fetch(`${API_BASE_URL}/reels/`, {
         method: "POST",
         headers: {
@@ -29,7 +29,7 @@ export function useCreateReels() {
 
       if (!response.ok) {
         const errorMessage =
-          (await response.json())?.detail || "Błąd przy tworzeniu rolki";
+          (await response.json())?.detail || "Error creating reel";
         throw new Error(errorMessage);
       }
 

@@ -11,7 +11,7 @@ export function useCreateMusic() {
   return useMutation({
     mutationFn: async ({ reel, token }: CreateMusicArgs) => {
       const { musicTitle, musicFile } = reel;
-      if (!token) throw new Error("Brak tokenu – użytkownik niezalogowany");
+      if (!token) throw new Error("Missing auth token");
 
       const formData = new FormData();
       formData.append("title", musicTitle);
@@ -27,7 +27,7 @@ export function useCreateMusic() {
 
       if (!musicRes.ok) {
         const errorMessage =
-          (await musicRes.json())?.detail || "Błąd przy tworzeniu muzyki";
+          (await musicRes.json())?.detail || "Error creating music";
         throw new Error(errorMessage);
       }
 
